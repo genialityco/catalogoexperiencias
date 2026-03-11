@@ -1,0 +1,149 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Investment from '../components/Investment.astro';
+---
+
+<Layout>
+	<Navigation />
+	<main class="page-content">
+		<section class="hero-section">
+			<div class="container">
+				<h1>Planes de Inversión</h1>
+				<p>Implementaciones modulares que se ajustan al tamaño de tu evento. Todos nuestros planes incluyen hardware, instalación y soporte remoto.</p>
+			</div>
+		</section>
+		<Investment />
+
+		<section class="additional-info">
+			<div class="container">
+				<h2>¿Por qué invertir en Geniality?</h2>
+				<div class="reasons">
+					<div class="reason">
+						<h3>🚀 ROI Garantizado</h3>
+						<p>Recupera tu inversión en el primer evento con el aumento en ventas.</p>
+					</div>
+					<div class="reason">
+						<h3>⚡ Instalación Rápida</h3>
+						<p>Setup completo en menos de 24 horas antes del evento.</p>
+					</div>
+					<div class="reason">
+						<h3>🎯 Soporte 24/7</h3>
+						<p>Equipo técnico disponible durante todo el evento.</p>
+					</div>
+					<div class="reason">
+						<h3>📊 Métricas Detalladas</h3>
+						<p>Reportes completos de engagement y conversiones post-evento.</p>
+					</div>
+				</div>
+
+				<div class="cta-section">
+					<h2>¿Listo para transformar tu venue?</h2>
+					<p>Contacta con nuestro equipo para una consultoría gratuita y personalizada.</p>
+					<a href="/hablemos" class="btn-cta">Hablemos</a>
+				</div>
+			</div>
+		</section>
+	</main>
+</Layout>
+
+<style>
+	.page-content {
+		padding-top: 80px;
+	}
+
+	.hero-section {
+		background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+		padding: 5rem 0;
+		text-align: center;
+		color: #fff;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 2rem;
+	}
+
+	.hero-section h1 {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+	}
+
+	.hero-section p {
+		font-size: 1.2rem;
+		color: #ccc;
+		max-width: 800px;
+		margin: 0 auto;
+		line-height: 1.6;
+	}
+
+	.additional-info {
+		padding: 5rem 0;
+		background: #111;
+		color: #fff;
+	}
+
+	.additional-info h2 {
+		font-size: 2rem;
+		color: #00ffff;
+		text-align: center;
+		margin-bottom: 3rem;
+	}
+
+	.reasons {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 2rem;
+		margin-bottom: 4rem;
+	}
+
+	.reason {
+		text-align: center;
+		padding: 2rem;
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 15px;
+	}
+
+	.reason h3 {
+		color: #00ffff;
+		margin-bottom: 1rem;
+	}
+
+	.reason p {
+		color: #ccc;
+		line-height: 1.6;
+	}
+
+	.cta-section {
+		text-align: center;
+		padding: 3rem;
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 15px;
+	}
+
+	.cta-section h2 {
+		color: #fff;
+		margin-bottom: 1rem;
+	}
+
+	.cta-section p {
+		color: #ccc;
+		margin-bottom: 2rem;
+	}
+
+	.btn-cta {
+		display: inline-block;
+		background: linear-gradient(45deg, #00ffff, #ff00ff);
+		color: #000;
+		padding: 1rem 2rem;
+		border-radius: 50px;
+		text-decoration: none;
+		font-weight: 600;
+		transition: transform 0.3s;
+	}
+
+	.btn-cta:hover {
+		transform: scale(1.05);
+	}
+</style>

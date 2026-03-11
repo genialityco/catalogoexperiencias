@@ -1,0 +1,169 @@
+---
+// Footer & Contact section
+---
+
+<section class="footer-cta" id="contacto">
+	<div class="container">
+		<h2 class="cta-title">
+			No dejes tu rentabilidad a la suerte del resultado del partido.
+		</h2>
+		<form class="contact-form">
+			<div class="form-group">
+				<label for="nombre">Nombre Completo</label>
+				<input type="text" id="nombre" name="nombre" required>
+			</div>
+			<div class="form-group">
+				<label for="empresa">Empresa / Venue</label>
+				<input type="text" id="empresa" name="empresa" required>
+			</div>
+			<div class="form-group">
+				<label for="tipo">¿Eres un Venue (Hotel/Bar) o una Agencia/Productora?</label>
+				<select id="tipo" name="tipo" required>
+					<option value="">Selecciona una opción</option>
+					<option value="venue">Venue (Hotel/Bar)</option>
+					<option value="agencia">Agencia/Productora</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="interes">¿Qué te interesa?</label>
+				<select id="interes" name="interes" required>
+					<option value="">Selecciona una opción</option>
+					<option value="individual">Experiencia individual</option>
+					<option value="completo">Ecosistema Completo</option>
+					<option value="alianza">Alianza</option>
+				</select>
+			</div>
+			<button type="submit" class="btn-submit">Enviar Consulta</button>
+		</form>
+		<div class="contact-info">
+			<div class="contact-item">
+				<strong>WhatsApp:</strong> +57 300 216 2757
+			</div>
+			<div class="contact-item">
+				<strong>Email:</strong> juan.lopez@geniality.com.co
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.footer-cta {
+		padding: 5rem 0;
+		background: linear-gradient(135deg, #000 0%, #111 100%);
+		position: relative;
+	}
+
+	.footer-cta::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><polygon points="0,20 50,0 100,20" fill="%23000" opacity="0.8"/></svg>') repeat-x;
+		background-size: 100px 20px;
+		opacity: 0.3;
+	}
+
+	.container {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 0 2rem;
+		position: relative;
+		z-index: 2;
+		text-align: center;
+	}
+
+	.cta-title {
+		font-size: 2rem;
+		font-weight: 700;
+		color: #fff;
+		margin-bottom: 3rem;
+		line-height: 1.4;
+	}
+
+	.contact-form {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 1rem;
+		margin-bottom: 3rem;
+	}
+
+	.form-group {
+		text-align: left;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.form-group label {
+		color: #fff;
+		font-size: 0.9rem;
+		margin-bottom: 0.5rem;
+		font-weight: 500;
+	}
+
+	.form-group input,
+	.form-group select {
+		width: 100%;
+		padding: 1rem;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.05);
+		color: #fff;
+		font-size: 1rem;
+		transition: border-color 0.3s;
+	}
+
+	.form-group input::placeholder {
+		color: #aaa;
+	}
+
+	.form-group input:focus,
+	.form-group select:focus {
+		outline: none;
+		border-color: #00ffff;
+	}
+
+	.btn-submit {
+		grid-column: 1 / -1;
+		background: linear-gradient(45deg, #00ffff, #ff00ff);
+		color: #000;
+		border: none;
+		padding: 1rem 2rem;
+		border-radius: 50px;
+		font-size: 1.1rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: transform 0.3s;
+		margin-top: 1rem;
+	}
+
+	.btn-submit:hover {
+		transform: scale(1.05);
+	}
+
+	.contact-info {
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		padding-top: 2rem;
+		margin-top: 3rem;
+	}
+
+	.contact-item {
+		color: #ccc;
+		margin: 0.5rem 0;
+		font-size: 1rem;
+	}
+
+	.contact-item strong {
+		color: #00ffff;
+	}
+
+	@media (max-width: 768px) {
+		.contact-form {
+			grid-template-columns: 1fr;
+		}
+		.cta-title {
+			font-size: 1.5rem;
+		}
+	}
+</style>

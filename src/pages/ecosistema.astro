@@ -1,0 +1,158 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+---
+
+<Layout>
+	<Navigation />
+	<main class="page-content">
+		<section class="hero-section">
+			<div class="container">
+				<h1>El Ecosistema Geniality</h1>
+				<p>Una plataforma integral de experiencias interactivas para venues durante eventos deportivos.</p>
+			</div>
+		</section>
+
+		<section class="content-section">
+			<div class="container">
+				<h2>Arquitectura del Ecosistema</h2>
+				<p>Nuestro ecosistema está diseñado para crear una experiencia inmersiva que combina tecnología de vanguardia con la emoción natural del fútbol.</p>
+
+				<div class="ecosystem-components">
+					<div class="component">
+						<h3>🎯 Hardware Inteligente</h3>
+						<p>Pantallas táctiles, sensores ambientales y dispositivos IoT que responden en tiempo real a la transmisión del partido.</p>
+					</div>
+					<div class="component">
+						<h3>🎮 Gamificación Avanzada</h3>
+						<p>Mecánicas de juego que transforman espectadores pasivos en participantes activos del evento.</p>
+					</div>
+					<div class="component">
+						<h3>📊 Analytics en Tiempo Real</h3>
+						<p>Métricas detalladas de engagement, consumo y comportamiento del público para optimizar resultados.</p>
+					</div>
+					<div class="component">
+						<h3>🤝 Integración CRM</h3>
+						<p>Captura automática de datos de clientes para campañas de marketing personalizadas y retargeting.</p>
+					</div>
+				</div>
+
+				<h2>Beneficios del Ecosistema</h2>
+				<ul class="benefits">
+					<li>Incremento significativo en el tiempo de permanencia del público</li>
+					<li>Aumento en las ventas de alimentos y bebidas</li>
+					<li>Generación de leads cualificados para marketing</li>
+					<li>Posibilidad de monetización a través de patrocinadores</li>
+					<li>Diferenciación competitiva en el mercado de venues</li>
+				</ul>
+			</div>
+		</section>
+	</main>
+</Layout>
+
+<style>
+	.page-content {
+		padding-top: 80px;
+	}
+
+	.hero-section {
+		background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+		padding: 5rem 0;
+		text-align: center;
+		color: #fff;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 2rem;
+	}
+
+	.hero-section h1 {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+	}
+
+	.hero-section p {
+		font-size: 1.2rem;
+		color: #ccc;
+	}
+
+	.content-section {
+		padding: 5rem 0;
+		background: #000;
+		color: #fff;
+	}
+
+	.content-section h2 {
+		font-size: 2rem;
+		color: #00ffff;
+		margin-bottom: 2rem;
+		text-align: center;
+	}
+
+	.content-section p {
+		line-height: 1.6;
+		margin-bottom: 2rem;
+		color: #ccc;
+		text-align: center;
+		max-width: 800px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.ecosystem-components {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2rem;
+		margin-bottom: 4rem;
+	}
+
+	.component {
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 15px;
+		padding: 2rem;
+		text-align: center;
+		transition: transform 0.3s;
+	}
+
+	.component:hover {
+		transform: translateY(-5px);
+	}
+
+	.component h3 {
+		color: #00ffff;
+		margin-bottom: 1rem;
+	}
+
+	.component p {
+		color: #ccc;
+		line-height: 1.6;
+	}
+
+	.benefits {
+		max-width: 600px;
+		margin: 0 auto;
+		padding: 0;
+		list-style: none;
+	}
+
+	.benefits li {
+		padding: 1rem 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		position: relative;
+		padding-left: 2rem;
+	}
+
+	.benefits li::before {
+		content: '⚽';
+		position: absolute;
+		left: 0;
+		color: #00ffff;
+	}
+
+	.benefits li:last-child {
+		border-bottom: none;
+	}
+</style>

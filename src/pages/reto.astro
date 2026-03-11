@@ -1,0 +1,112 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+---
+
+<Layout>
+	<Navigation />
+	<main class="page-content">
+		<section class="hero-section">
+			<div class="container">
+				<h1>El Reto del 2026</h1>
+				<p>Descubre cómo transformar tu venue en un referente digital durante el Mundial.</p>
+			</div>
+		</section>
+
+		<section class="content-section">
+			<div class="container">
+				<h2>El Desafío Actual</h2>
+				<p>En el mundo de los eventos deportivos, especialmente durante un Mundial, los venues enfrentan el reto de mantener la atención del público más allá del partido en sí. La gente llega, consume mínimamente y se va cuando termina el encuentro.</p>
+
+				<h2>Nuestra Solución</h2>
+				<p>Implementamos tecnologías gamificadas que extienden la experiencia del partido, creando ecosistemas interactivos que multiplican el tiempo de permanencia y el consumo.</p>
+
+				<div class="stats">
+					<div class="stat">
+						<h3>300%</h3>
+						<p>Aumento en tiempo de permanencia</p>
+					</div>
+					<div class="stat">
+						<h3>150%</h3>
+						<p>Incremento en consumo F&B</p>
+					</div>
+					<div class="stat">
+						<h3>500+</h3>
+						<p>Leads generados por evento</p>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+</Layout>
+
+<style>
+	.page-content {
+		padding-top: 80px; /* Account for fixed nav */
+	}
+
+	.hero-section {
+		background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+		padding: 5rem 0;
+		text-align: center;
+		color: #fff;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 2rem;
+	}
+
+	.hero-section h1 {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+	}
+
+	.hero-section p {
+		font-size: 1.2rem;
+		color: #ccc;
+	}
+
+	.content-section {
+		padding: 5rem 0;
+		background: #111;
+		color: #fff;
+	}
+
+	.content-section h2 {
+		font-size: 2rem;
+		color: #00ffff;
+		margin-bottom: 1rem;
+	}
+
+	.content-section p {
+		line-height: 1.6;
+		margin-bottom: 2rem;
+		color: #ccc;
+	}
+
+	.stats {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 2rem;
+		margin-top: 3rem;
+	}
+
+	.stat {
+		text-align: center;
+		padding: 2rem;
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 15px;
+	}
+
+	.stat h3 {
+		font-size: 2.5rem;
+		color: #00ffff;
+		margin-bottom: 0.5rem;
+	}
+
+	.stat p {
+		color: #ccc;
+	}
+</style>

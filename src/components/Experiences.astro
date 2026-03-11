@@ -1,0 +1,222 @@
+---
+// Interactive Feed section - Catálogo de Experiencias
+---
+
+<section class="experiences" id="experiencias">
+	<div class="container">
+		<h2 class="section-title">EL FEED INTERACTIVO</h2>
+		<p class="section-subtitle">Catálogo de Experiencias</p>
+		
+		<!-- Filters -->
+		<div class="filters">
+			<button class="filter-btn active" data-filter="all">Todas</button>
+			<button class="filter-btn" data-filter="fnb">F&B (Alimentos y Bebidas)</button>
+			<button class="filter-btn" data-filter="locales">Locales</button>
+		</div>
+		
+		<!-- Feed Grid -->
+		<div class="feed-grid">
+			<div class="feed-card" data-category="fnb">
+				<div class="card-video">
+					<!-- Video QR Gigante -->
+					<video muted loop class="experience-video">
+						<source src="/videos/menu-dinamico.mp4" type="video/mp4">
+					</video>
+				</div>
+				<div class="card-content">
+					<h3>Menú Dinámico Flash</h3>
+					<a href="/experiencias/menu-dinamico" class="btn-detail">Ver a detalle y cotizar</a>
+				</div>
+			</div>
+			
+			<div class="feed-card" data-category="locales">
+				<div class="card-video">
+					<!-- Video de banderas compitiendo -->
+					<video muted loop class="experience-video">
+						<source src="/videos/gritometro.mp4" type="video/mp4">
+					</video>
+				</div>
+				<div class="card-content">
+					<h3>Gritómetro de Dominio</h3>
+					<a href="/experiencias/gritometro-dominio" class="btn-detail">Ver a detalle y cotizar</a>
+				</div>
+			</div>
+			
+			<div class="feed-card" data-category="fnb locales">
+				<div class="card-video">
+					<!-- Video de medidor explotando -->
+					<video muted loop class="experience-video">
+						<source src="/videos/termometro.mp4" type="video/mp4">
+					</video>
+				</div>
+				<div class="card-content">
+					<h3>Termómetro de Tensión</h3>
+					<a href="/experiencias/termometro-tension" class="btn-detail">Ver a detalle y cotizar</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const filterBtns = document.querySelectorAll('.filter-btn');
+		const feedCards = document.querySelectorAll('.feed-card');
+
+		filterBtns.forEach(btn => {
+			btn.addEventListener('click', function() {
+				// Remove active class from all buttons
+				filterBtns.forEach(b => b.classList.remove('active'));
+				// Add active class to clicked button
+				this.classList.add('active');
+
+				const filter = this.getAttribute('data-filter');
+
+				feedCards.forEach(card => {
+					const categories = card.getAttribute('data-category').split(' ');
+					
+					if (filter === 'all' || categories.includes(filter)) {
+						card.style.display = 'block';
+					} else {
+						card.style.display = 'none';
+					}
+				});
+			});
+		});
+	});
+</script>
+</section>
+
+<style>
+	.experiences {
+		padding: 5rem 0;
+		background: #000;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 2rem;
+	}
+
+	.section-title {
+		font-size: 2.5rem;
+		font-weight: 700;
+		color: #fff;
+		text-align: center;
+		margin-bottom: 0.5rem;
+	}
+
+	.section-subtitle {
+		font-size: 1.8rem;
+		color: #00ffff;
+		text-align: center;
+		margin-bottom: 3rem;
+		font-weight: 600;
+	}
+
+	.filters {
+		display: flex;
+		justify-content: center;
+		gap: 1rem;
+		margin-bottom: 3rem;
+		flex-wrap: wrap;
+	}
+
+	.filter-btn {
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		color: #fff;
+		padding: 0.5rem 1rem;
+		border-radius: 25px;
+		cursor: pointer;
+		transition: all 0.3s;
+		font-weight: 500;
+	}
+
+	.filter-btn.active,
+	.filter-btn:hover {
+		background: #00ffff;
+		color: #000;
+		border-color: #00ffff;
+	}
+
+	.feed-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2rem;
+	}
+
+	.feed-card {
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 15px;
+		overflow: hidden;
+		transition: transform 0.3s, box-shadow 0.3s;
+		cursor: pointer;
+	}
+
+	.feed-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+	}
+
+	.card-video {
+		position: relative;
+		height: 200px;
+		overflow: hidden;
+	}
+
+	.experience-video {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.3s;
+	}
+
+	.feed-card:hover .experience-video {
+		transform: scale(1.05);
+	}
+
+	.card-content {
+		padding: 1.5rem;
+		text-align: center;
+	}
+
+	.card-content h3 {
+		font-size: 1.3rem;
+		font-weight: 600;
+		color: #00ffff;
+		margin-bottom: 1rem;
+	}
+
+	.btn-detail {
+		display: inline-block;
+		background: transparent;
+		border: 1px solid #00ffff;
+		color: #00ffff;
+		padding: 0.5rem 1rem;
+		border-radius: 25px;
+		text-decoration: none;
+		font-weight: 500;
+		transition: all 0.3s;
+	}
+
+	.btn-detail:hover {
+		background: #00ffff;
+		color: #000;
+	}
+
+	@media (max-width: 768px) {
+		.feed-grid {
+			grid-template-columns: 1fr;
+		}
+		.section-title {
+			font-size: 2rem;
+		}
+		.filters {
+			flex-direction: column;
+			align-items: center;
+		}
+	}
+</style>

@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Experiences from '../components/Experiences.astro';
+---
+
+<Layout>
+	<Navigation />
+	<main class="page-content">
+		<section class="hero-section">
+			<div class="container">
+				<h1>Nuestras Experiencias</h1>
+				<p>Descubre las 5 experiencias interactivas que revolucionarán tu venue durante el Mundial 2026.</p>
+			</div>
+		</section>
+		<Experiences />
+	</main>
+</Layout>
+
+<style>
+	.page-content {
+		padding-top: 80px;
+	}
+
+	.hero-section {
+		background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+		padding: 5rem 0;
+		text-align: center;
+		color: #fff;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 2rem;
+	}
+
+	.hero-section h1 {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+	}
+
+	.hero-section p {
+		font-size: 1.2rem;
+		color: #ccc;
+	}
+</style>

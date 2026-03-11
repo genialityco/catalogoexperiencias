@@ -1,0 +1,105 @@
+---
+// Pitch Global section - El Problema y La Promesa
+---
+
+<section class="pitch">
+	<div class="container">
+		<h2 class="section-title">El Reto del 2026: De Cartelera a Referente Digital</h2>
+		<p class="intro-text">
+			La gente va, ve el partido y se va. El consumo se estanca mientras el balón rueda. Rompe el ciclo con tecnología diseñada para entender el comportamiento humano y la euforia colectiva.
+		</p>
+		<div class="pitch-cards">
+			<div class="card">
+				<div class="icon">⏳</div>
+				<h3>+300% Retención</h3>
+				<p>Dinámicas que convierten a extraños en una sola hinchada.</p>
+			</div>
+			<div class="card">
+				<div class="icon">🍔</div>
+				<h3>Aceleración de F&B</h3>
+				<p>Activación de compras impulsivas sincronizadas con los picos de emoción.</p>
+			</div>
+			<div class="card">
+				<div class="icon">📊</div>
+				<h3>Captura de Leads</h3>
+				<p>Convierte tu ecosistema en un activo digital revendible a marcas patrocinadoras.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.pitch {
+		padding: 5rem 0;
+		background: #111;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 2rem;
+	}
+
+	.section-title {
+		font-size: 2.5rem;
+		font-weight: 700;
+		color: #fff;
+		text-align: center;
+		margin-bottom: 1rem;
+	}
+
+	.intro-text {
+		font-size: 1.2rem;
+		color: #ccc;
+		text-align: center;
+		max-width: 800px;
+		margin: 0 auto 3rem;
+		line-height: 1.6;
+	}
+
+	.pitch-cards {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2rem;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 15px;
+		padding: 2rem;
+		text-align: center;
+		transition: transform 0.3s, box-shadow 0.3s;
+	}
+
+	.card:hover {
+		transform: translateY(-10px);
+		box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+	}
+
+	.icon {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+	}
+
+	.card h3 {
+		font-size: 1.5rem;
+		font-weight: 600;
+		color: #00ffff;
+		margin-bottom: 1rem;
+	}
+
+	.card p {
+		color: #ccc;
+		line-height: 1.6;
+	}
+
+	@media (max-width: 768px) {
+		.section-title {
+			font-size: 2rem;
+		}
+		.pitch-cards {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

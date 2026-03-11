@@ -1,46 +1,78 @@
-# Astro Starter Kit: Basics
+# Geniality - Experiencias Interactivas para Eventos
 
-```sh
-npm create astro@latest -- --template basics
-```
+Sitio web para Geniality, una empresa especializada en soluciones tecnológicas gamificadas para venues durante eventos deportivos, especialmente el Mundial 2026.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 🌐 Páginas del Sitio
 
-## 🚀 Project Structure
+- **Inicio** (`/`) - Página principal con hero, pitch, experiencias, planes y CTA
+- **El Reto** (`/reto`) - Información sobre el desafío actual de los venues
+- **El Ecosistema** (`/ecosistema`) - Arquitectura y componentes de la plataforma
+- **Experiencias** (`/experiencias`) - Las 5 experiencias interactivas principales
+- **Planes de Inversión** (`/planes`) - Modelos de inversión y precios
+- **Hablemos** (`/hablemos`) - Información de contacto y formulario
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🎨 Características del Diseño
+
+- **Tema Oscuro** con acentos neón (cian y magenta)
+- **Animaciones Dinámicas** inspiradas en gráficos deportivos
+- **Responsive Design** para todos los dispositivos
+- **Navegación Sticky** siempre visible
+- **Efectos Visuales** con gradientes y transparencias
+
+## 🛠️ Tecnologías Utilizadas
+
+- **Astro** - Framework web moderno
+- **CSS3** - Estilos con gradientes, animaciones y efectos visuales
+- **Inter Font** - Tipografía moderna de Google Fonts
+
+## 🚀 Comandos
+
+| Comando                   | Acción                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm install`             | Instala las dependencias                         |
+| `npm run dev`             | Inicia el servidor de desarrollo en `localhost:4321` |
+| `npm run build`           | Construye el sitio para producción en `./dist/` |
+| `npm run preview`         | Previsualiza el build localmente antes de desplegar |
+| `npm run astro ...`       | Ejecuta comandos CLI de Astro                    |
+
+## 📁 Estructura del Proyecto
 
 ```text
 /
 ├── public/
 │   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+├── src/
+│   ├── components/
+│   │   ├── Navigation.astro
+│   │   ├── Hero.astro
+│   │   ├── Pitch.astro
+│   │   ├── Experiences.astro
+│   │   ├── Investment.astro
+│   │   └── FooterCTA.astro
+│   ├── layouts/
+│   │   └── Layout.astro
+│   └── pages/
+│       ├── index.astro
+│       ├── reto.astro
+│       ├── ecosistema.astro
+│       ├── experiencias.astro
+│       ├── planes.astro
+│       └── hablemos.astro
+├── astro.config.mjs
+├── package.json
+└── tsconfig.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 🎯 Experiencias Implementadas
 
-## 🧞 Commands
+1. **El Menú Dinámico Flash** - QR codes temporales para compras impulsivas
+2. **Gritómetro de Dominio** - Competencia de ruido entre grupos
+3. **La Ola Digital** - Reto cooperativo con acelerómetros
+4. **Precisión Sphera** - Portería digital con sensores
+5. **Espejo de Hinchas AR** - Filtros de realidad aumentada
 
-All commands are run from the root of the project, from a terminal:
+## 📞 Contacto
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+**Juan López** - CEO  
+📧 juan.lopez@geniality.com.co  
+📞 +57 300 216 2757
