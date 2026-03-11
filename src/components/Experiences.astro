@@ -2,74 +2,76 @@
 // Interactive Feed section - Catálogo de Experiencias
 import PixelReveal from './PixelReveal.jsx';
 ---
-<section id="experiencias" class="experiences relative py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900">
-	<div class="container relative z-10 max-w-6xl mx-auto px-6">
-		<h2 class="section-title text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-			EL FEED INTERACTIVO
-		</h2>
-		<p class="section-subtitle text-xl md:text-2xl text-cyan-400 text-center mb-12 font-semibold">
-			Catálogo de Experiencias
-		</p>
+<section id="experiencias" class="experiences relative py-32 bg-black/70">
+	<div class="container relative z-10 max-w-6xl mx-auto px-6 md:px-12">
+		<div class="mb-16">
+			<h2 class="section-title text-7xl md:text-8xl font-black leading-tight mb-4 text-white">
+				EXPERIENCIAS
+				<br />
+				<span class="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">INTERACTIVAS</span>
+			</h2>
+			<p class="section-subtitle text-lg text-gray-400 max-w-2xl">
+				Catálogo de activaciones diseñadas para capturar emoción y generar ingresos.
+			</p>
+		</div>
 		
 		<!-- Filters -->
-		<div class="filters flex justify-center gap-4 mb-12 flex-wrap">
-			<button class="filter-btn active bg-cyan-500 text-black px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg">
+		<div class="filters flex gap-3 mb-16 flex-wrap">
+			<button class="filter-btn active bg-white text-black px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 hover:scale-105">
 				Todas
 			</button>
-			<button class="filter-btn bg-gray-800 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:bg-cyan-500 hover:text-black hover:scale-105">
-				F&B (Alimentos y Bebidas)
+			<button class="filter-btn bg-gray-900 text-white border border-gray-700 px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 hover:border-white">
+				F&B
 			</button>
-			<button class="filter-btn bg-gray-800 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:bg-purple-500 hover:text-black hover:scale-105">
+			<button class="filter-btn bg-gray-900 text-white border border-gray-700 px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 hover:border-white">
 				Locales
 			</button>
 		</div>
 		
 		<!-- Feed Grid -->
 		<div class="feed-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-			<div class="feed-card group relative bg-gradient-to-br from-cyan-900/20 to-purple-900/20 backdrop-blur-sm border border-cyan-500/20 rounded-2xl overflow-hidden hover:border-cyan-400/50 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/10" data-category="fnb">
-				<div class="card-video relative h-48 overflow-hidden">
-					<!-- Video QR Gigante -->
+			<div class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden hover:border-white transition-all duration-500" data-category="fnb">
+				<div class="card-video relative h-64 overflow-hidden bg-gray-900">
 					<div class="relative w-full h-full">
-						<img src="/src/assets/experiences/experiencia-ejemplo1.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+						<img src="/assets/experiences/experiencia-ejemplo1.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
 					</div>
-					<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 				</div>
-				<div class="card-content p-6 text-center">
-					<h3 class="text-xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">Menú Dinámico Flash</h3>
-					<a href="/experiencias/menu-dinamico" class="inline-block bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg">
-						Ver a detalle y cotizar
+				<div class="card-content p-8">
+					<h3 class="text-2xl font-black text-white mb-3">Menú Dinámico Flash</h3>
+					<p class="text-sm text-gray-400 mb-6">Activación digital para impulsar ventas de F&B.</p>
+					<a href="/experiencias/menu-dinamico" class="inline-block bg-white text-black px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 hover:bg-gray-200">
+						Ver detalles
 					</a>
 				</div>
 			</div>
 			
-			<div class="feed-card group relative bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-sm border border-purple-500/20 rounded-2xl overflow-hidden hover:border-purple-400/50 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/10" data-category="locales">
-				<div class="card-video relative h-48 overflow-hidden">
+			<div class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden hover:border-white transition-all duration-500" data-category="locales">
+				<div class="card-video relative h-64 overflow-hidden bg-gray-900">
 					<!-- Video de banderas compitiendo -->
 					<div class="relative w-full h-full">
-						<img src="/src/assets/experiences/experiencia-ejemplo2.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+						<img src="/assets/experiences/experiencia-ejemplo2.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
 					</div>
-					<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 				</div>
-				<div class="card-content p-6 text-center">
-					<h3 class="text-xl font-bold text-white mb-4 group-hover:text-purple-400 transition-colors">Gritómetro de Dominio</h3>
-					<a href="/experiencias/gritometro-dominio" class="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg">
-						Ver a detalle y cotizar
+				<div class="card-content p-8">
+					<h3 class="text-2xl font-black text-white mb-3">Gritómetro de Dominio</h3>
+					<p class="text-sm text-gray-400 mb-6">Gamificación de emoción en vivo.</p>
+					<a href="/experiencias/gritometro-dominio" class="inline-block bg-white text-black px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 hover:bg-gray-200">
+						Ver detalles
 					</a>
 				</div>
 			</div>
 			
-			<div class="feed-card group relative bg-gradient-to-br from-pink-900/20 to-cyan-900/20 backdrop-blur-sm border border-pink-500/20 rounded-2xl overflow-hidden hover:border-pink-400/50 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/10" data-category="fnb locales">
-				<div class="card-video relative h-48 overflow-hidden">
-					<!-- Video de medidor explotando -->
+			<div class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden hover:border-white transition-all duration-500" data-category="fnb locales">
+				<div class="card-video relative h-64 overflow-hidden bg-gray-900">
 					<div class="relative w-full h-full">
-						<img src="/src/assets/experiences/experiencia-ejemplo3.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+						<img src="/assets/experiences/experiencia-ejemplo3.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
 					</div>
-					<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 				</div>
-				<div class="card-content p-6 text-center">
-					<h3 class="text-xl font-bold text-white mb-4 group-hover:text-pink-400 transition-colors">Termómetro de Tensión</h3>
-					<a href="/experiencias/termometro-tension" class="inline-block bg-gradient-to-r from-pink-500 to-cyan-500 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg">
-						Ver a detalle y cotizar
+				<div class="card-content p-8">
+					<h3 class="text-2xl font-black text-white mb-3">Termómetro de Tensión</h3>
+					<p class="text-sm text-gray-400 mb-6">Medidor interactivo de adrenalina.</p>
+					<a href="/experiencias/termometro-tension" class="inline-block bg-white text-black px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 hover:bg-gray-200">
+						Ver detalles
 					</a>
 				</div>
 			</div>

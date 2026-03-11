@@ -2,48 +2,51 @@
 // Footer & Contact section
 ---
 
-<section class="footer-cta relative" id="contacto">
-	<div class="footer-background absolute inset-0 bg-cover bg-center" style="background-image: url('/src/assets/footer-image.png');">
-		<div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+<section class="footer-cta relative py-32" id="contacto">
+	<div class="footer-background absolute inset-0 bg-cover bg-center" style="background-image: url('/assets/footer-image.png');">
+		<div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 	</div>
-	<div class="container relative z-10">
-		<h2 class="cta-title">
-			No dejes tu rentabilidad a la suerte del resultado del partido.
+	<div class="container relative z-10 max-w-4xl mx-auto px-6 md:px-12">
+		<h2 class="cta-title text-6xl md:text-7xl font-black leading-tight mb-12 text-white">
+			PROTEGE TU
+			<br />
+			<span class="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">RENTABILIDAD</span>
 		</h2>
-		<form class="contact-form">
+		<form class="contact-form bg-black/80 backdrop-blur-sm border border-gray-800 rounded-xl p-8 md:p-12 space-y-6">
 			<div class="form-group">
-				<label for="nombre">Nombre Completo</label>
-				<input type="text" id="nombre" name="nombre" required>
+				<label for="nombre" class="block text-white font-bold mb-2 text-sm">Nombre Completo</label>
+				<input type="text" id="nombre" name="nombre" class="w-full bg-gray-900 text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-white transition-colors" required>
 			</div>
 			<div class="form-group">
-				<label for="empresa">Empresa / Venue</label>
-				<input type="text" id="empresa" name="empresa" required>
+				<label for="empresa" class="block text-white font-bold mb-2 text-sm">Empresa / Venue</label>
+				<input type="text" id="empresa" name="empresa" class="w-full bg-gray-900 text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-white transition-colors" required>
 			</div>
 			<div class="form-group">
-				<label for="tipo">¿Eres un Venue (Hotel/Bar) o una Agencia/Productora?</label>
-				<select id="tipo" name="tipo" required>
+				<label for="tipo" class="block text-white font-bold mb-2 text-sm">¿Eres un Venue o Agencia?</label>
+				<select id="tipo" name="tipo" class="w-full bg-gray-900 text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-white transition-colors" required>
 					<option value="">Selecciona una opción</option>
 					<option value="venue">Venue (Hotel/Bar)</option>
 					<option value="agencia">Agencia/Productora</option>
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="interes">¿Qué te interesa?</label>
-				<select id="interes" name="interes" required>
+				<label for="interes" class="block text-white font-bold mb-2 text-sm">¿Qué te interesa?</label>
+				<select id="interes" name="interes" class="w-full bg-gray-900 text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-white transition-colors" required>
 					<option value="">Selecciona una opción</option>
 					<option value="individual">Experiencia individual</option>
 					<option value="completo">Ecosistema Completo</option>
 					<option value="alianza">Alianza</option>
 				</select>
 			</div>
-			<button type="submit" class="btn-submit">Enviar Consulta</button>
+			<button type="submit" class="btn-submit w-full bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-100 transition-colors mt-8">
+				Enviar Consulta
+			</button>
 		</form>
-		<div class="contact-info">
-			<div class="contact-item">
-				<strong>WhatsApp:</strong> +57 300 216 2757
-			</div>
-			<div class="contact-item">
-				<strong>Email:</strong> juan.lopez@geniality.com.co
+		<div class="contact-info mt-12 text-center">
+			<p class="text-gray-400 text-sm mb-4">O contacta directamente:</p>
+			<div class="space-y-2">
+				<div class="text-white font-bold">WhatsApp: +57 300 216 2757</div>
+				<div class="text-white font-bold">juan.lopez@geniality.com.co</div>
 			</div>
 		</div>
 	</div>

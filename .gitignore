@@ -1,24 +1,70 @@
-# build output
+
+# Local Netlify folder
+.netlify
+node_modules
+
+# Build directories
 dist/
+build/
 
-# generated types
-.astro/
+# Dependencies
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
-# dependencies
-node_modules/
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production.local
 
-# logs
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+.windows-terminal
+.AppleDouble
+.LSOverride
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
-# environment variables
-.env
-.env.production
+# Temporary files
+*.tmp
+*.temp
+.cache/
 
-# macOS-specific files
-.DS_Store
+# Database files
+*.db
+*.sqlite
+*.sqlite3
 
-# jetbrains setting folder
-.idea/
+# Testing
+coverage/
+.coverage
+*.lcov
+
+# Vite
+.vite/
