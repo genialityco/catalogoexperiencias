@@ -3,7 +3,7 @@
 import EnergyAura from './EnergyAura.jsx';
 ---
 
-<section class="hero relative min-h-screen flex items-center justify-center overflow-hidden bg-black/50">
+<section class="hero relative min-h-screen flex items-center justify-center overflow-hidden bg-black/30">
 	<!-- <EnergyAura client:only="react" /> -->
 	<div class="hero-background absolute inset-0 bg-cover bg-center" style="background-image: url('/assets/heroimage.png');">
 		<!-- Placeholder image used until the video is ready -->
@@ -45,3 +45,9 @@ import EnergyAura from './EnergyAura.jsx';
 		</div>
 	</div>
 </section>
+
+<style>
+	.hero-title {
+		text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+	}
+</style>
