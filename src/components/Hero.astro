@@ -5,13 +5,14 @@ import EnergyAura from './EnergyAura.jsx';
 
 <section class="hero relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
 	<!-- <EnergyAura client:only="react" /> -->
-	<div class="hero-background absolute inset-0">
-		<!-- Video en bucle: hinchas saltando frente a pantalla interactiva vs meseros entregando bebidas -->
+	<div class="hero-background absolute inset-0 bg-cover bg-center" style="background-image: url('/src/assets/heroimage.png');">
+		<!-- Placeholder image used until the video is ready -->
+		<!--
 		<video autoplay muted loop class="w-full h-full object-cover opacity-20">
 			<source src="/videos/hero-loop.mp4" type="video/mp4">
-			<!-- Fallback placeholder -->
 			<div class="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20"></div>
 		</video>
+		-->
 		<div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
 	</div>
 	<div class="hero-content relative z-10 text-center max-w-4xl px-6">
@@ -31,4 +32,3 @@ import EnergyAura from './EnergyAura.jsx';
 		</div>
 	</div>
 </section>
-
