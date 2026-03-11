@@ -62,6 +62,20 @@ export default function ScrollAnimations() {
       }
     });
 
+    // Pixel reveal overlay animation
+    gsap.to('.feed-card .pixel-overlay', {
+      opacity: 0,
+      scale: 1.3,
+      duration: 1,
+      stagger: 0.1,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.feed-grid',
+        start: 'top 90%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
     // Investment section parallax
     gsap.to('.investment', {
       backgroundPosition: '50% 100px',
