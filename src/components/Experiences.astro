@@ -2,56 +2,75 @@
 // Interactive Feed section - Catálogo de Experiencias
 ---
 
-<section class="experiences" id="experiencias">
-	<div class="container">
-		<h2 class="section-title">EL FEED INTERACTIVO</h2>
-		<p class="section-subtitle">Catálogo de Experiencias</p>
+<section id="experiencias" class="experiences relative py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900">
+	<div class="container relative z-10 max-w-6xl mx-auto px-6">
+		<h2 class="section-title text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+			EL FEED INTERACTIVO
+		</h2>
+		<p class="section-subtitle text-xl md:text-2xl text-cyan-400 text-center mb-12 font-semibold">
+			Catálogo de Experiencias
+		</p>
 		
 		<!-- Filters -->
-		<div class="filters">
-			<button class="filter-btn active" data-filter="all">Todas</button>
-			<button class="filter-btn" data-filter="fnb">F&B (Alimentos y Bebidas)</button>
-			<button class="filter-btn" data-filter="locales">Locales</button>
+		<div class="filters flex justify-center gap-4 mb-12 flex-wrap">
+			<button class="filter-btn active bg-cyan-500 text-black px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg">
+				Todas
+			</button>
+			<button class="filter-btn bg-gray-800 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:bg-cyan-500 hover:text-black hover:scale-105">
+				F&B (Alimentos y Bebidas)
+			</button>
+			<button class="filter-btn bg-gray-800 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:bg-purple-500 hover:text-black hover:scale-105">
+				Locales
+			</button>
 		</div>
 		
 		<!-- Feed Grid -->
-		<div class="feed-grid">
-			<div class="feed-card" data-category="fnb">
-				<div class="card-video">
+		<div class="feed-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+			<div class="feed-card group bg-gradient-to-br from-cyan-900/20 to-purple-900/20 backdrop-blur-sm border border-cyan-500/20 rounded-2xl overflow-hidden hover:border-cyan-400/50 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/10" data-category="fnb">
+				<div class="card-video relative h-48 overflow-hidden">
 					<!-- Video QR Gigante -->
-					<video muted loop class="experience-video">
+					<video muted loop class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
 						<source src="/videos/menu-dinamico.mp4" type="video/mp4">
 					</video>
+					<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 				</div>
-				<div class="card-content">
-					<h3>Menú Dinámico Flash</h3>
-					<a href="/experiencias/menu-dinamico" class="btn-detail">Ver a detalle y cotizar</a>
+				<div class="card-content p-6 text-center">
+					<h3 class="text-xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">Menú Dinámico Flash</h3>
+					<a href="/experiencias/menu-dinamico" class="inline-block bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg">
+						Ver a detalle y cotizar
+					</a>
 				</div>
 			</div>
 			
-			<div class="feed-card" data-category="locales">
-				<div class="card-video">
+			<div class="feed-card group bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-sm border border-purple-500/20 rounded-2xl overflow-hidden hover:border-purple-400/50 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/10" data-category="locales">
+				<div class="card-video relative h-48 overflow-hidden">
 					<!-- Video de banderas compitiendo -->
-					<video muted loop class="experience-video">
+					<video muted loop class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
 						<source src="/videos/gritometro.mp4" type="video/mp4">
 					</video>
+					<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 				</div>
-				<div class="card-content">
-					<h3>Gritómetro de Dominio</h3>
-					<a href="/experiencias/gritometro-dominio" class="btn-detail">Ver a detalle y cotizar</a>
+				<div class="card-content p-6 text-center">
+					<h3 class="text-xl font-bold text-white mb-4 group-hover:text-purple-400 transition-colors">Gritómetro de Dominio</h3>
+					<a href="/experiencias/gritometro-dominio" class="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg">
+						Ver a detalle y cotizar
+					</a>
 				</div>
 			</div>
 			
-			<div class="feed-card" data-category="fnb locales">
-				<div class="card-video">
+			<div class="feed-card group bg-gradient-to-br from-pink-900/20 to-cyan-900/20 backdrop-blur-sm border border-pink-500/20 rounded-2xl overflow-hidden hover:border-pink-400/50 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/10" data-category="fnb locales">
+				<div class="card-video relative h-48 overflow-hidden">
 					<!-- Video de medidor explotando -->
-					<video muted loop class="experience-video">
+					<video muted loop class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
 						<source src="/videos/termometro.mp4" type="video/mp4">
 					</video>
+					<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 				</div>
-				<div class="card-content">
-					<h3>Termómetro de Tensión</h3>
-					<a href="/experiencias/termometro-tension" class="btn-detail">Ver a detalle y cotizar</a>
+				<div class="card-content p-6 text-center">
+					<h3 class="text-xl font-bold text-white mb-4 group-hover:text-pink-400 transition-colors">Termómetro de Tensión</h3>
+					<a href="/experiencias/termometro-tension" class="inline-block bg-gradient-to-r from-pink-500 to-cyan-500 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg">
+						Ver a detalle y cotizar
+					</a>
 				</div>
 			</div>
 		</div>
@@ -66,16 +85,27 @@
 		filterBtns.forEach(btn => {
 			btn.addEventListener('click', function() {
 				// Remove active class from all buttons
-				filterBtns.forEach(b => b.classList.remove('active'));
+				filterBtns.forEach(b => {
+					b.classList.remove('active', 'bg-cyan-500', 'text-black');
+					b.classList.add('bg-gray-800', 'text-white');
+				});
+				
 				// Add active class to clicked button
-				this.classList.add('active');
+				this.classList.add('active', 'bg-cyan-500', 'text-black');
+				this.classList.remove('bg-gray-800', 'text-white');
 
-				const filter = this.getAttribute('data-filter');
+				const filterText = this.textContent.toLowerCase().trim();
+				const filterMap = {
+					'todas': 'all',
+					'f&b (alimentos y bebidas)': 'fnb',
+					'locales': 'locales'
+				};
+				const filterValue = filterMap[filterText] || 'all';
 
 				feedCards.forEach(card => {
 					const categories = card.getAttribute('data-category').split(' ');
 					
-					if (filter === 'all' || categories.includes(filter)) {
+					if (filterValue === 'all' || categories.includes(filterValue)) {
 						card.style.display = 'block';
 					} else {
 						card.style.display = 'none';
@@ -85,138 +115,7 @@
 		});
 	});
 </script>
+
+
 </section>
 
-<style>
-	.experiences {
-		padding: 5rem 0;
-		background: #000;
-	}
-
-	.container {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0 2rem;
-	}
-
-	.section-title {
-		font-size: 2.5rem;
-		font-weight: 700;
-		color: #fff;
-		text-align: center;
-		margin-bottom: 0.5rem;
-	}
-
-	.section-subtitle {
-		font-size: 1.8rem;
-		color: #00ffff;
-		text-align: center;
-		margin-bottom: 3rem;
-		font-weight: 600;
-	}
-
-	.filters {
-		display: flex;
-		justify-content: center;
-		gap: 1rem;
-		margin-bottom: 3rem;
-		flex-wrap: wrap;
-	}
-
-	.filter-btn {
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		color: #fff;
-		padding: 0.5rem 1rem;
-		border-radius: 25px;
-		cursor: pointer;
-		transition: all 0.3s;
-		font-weight: 500;
-	}
-
-	.filter-btn.active,
-	.filter-btn:hover {
-		background: #00ffff;
-		color: #000;
-		border-color: #00ffff;
-	}
-
-	.feed-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-		gap: 2rem;
-	}
-
-	.feed-card {
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 15px;
-		overflow: hidden;
-		transition: transform 0.3s, box-shadow 0.3s;
-		cursor: pointer;
-	}
-
-	.feed-card:hover {
-		transform: translateY(-5px);
-		box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
-	}
-
-	.card-video {
-		position: relative;
-		height: 200px;
-		overflow: hidden;
-	}
-
-	.experience-video {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		transition: transform 0.3s;
-	}
-
-	.feed-card:hover .experience-video {
-		transform: scale(1.05);
-	}
-
-	.card-content {
-		padding: 1.5rem;
-		text-align: center;
-	}
-
-	.card-content h3 {
-		font-size: 1.3rem;
-		font-weight: 600;
-		color: #00ffff;
-		margin-bottom: 1rem;
-	}
-
-	.btn-detail {
-		display: inline-block;
-		background: transparent;
-		border: 1px solid #00ffff;
-		color: #00ffff;
-		padding: 0.5rem 1rem;
-		border-radius: 25px;
-		text-decoration: none;
-		font-weight: 500;
-		transition: all 0.3s;
-	}
-
-	.btn-detail:hover {
-		background: #00ffff;
-		color: #000;
-	}
-
-	@media (max-width: 768px) {
-		.feed-grid {
-			grid-template-columns: 1fr;
-		}
-		.section-title {
-			font-size: 2rem;
-		}
-		.filters {
-			flex-direction: column;
-			align-items: center;
-		}
-	}
-</style>
