@@ -1,172 +1,98 @@
 ---
-// Interactive Feed section - Catálogo de Experiencias
-import PixelReveal from './PixelReveal.jsx';
+// Catálogo dinámico de experiencias
 ---
-<section id="experiencias" class="experiences relative py-32 md:py-48">
-	<div class="container relative z-10 max-w-7xl mx-auto px-6 md:px-12">
-		<!-- Section Header -->
-		<div class="mb-20 max-w-3xl">
-			<h2 class="text-5xl md:text-7xl font-black font-display leading-tight mb-6 text-text-primary">
-				Experiencias
-				<br />
-				<span class="bg-gradient-to-r from-brand-cyan via-brand-accent to-brand-purple bg-clip-text text-transparent">Interactivas</span>
-			</h2>
-			<p class="text-lg text-text-secondary leading-relaxed font-light max-w-2xl">
-				Catálogo de activaciones inmersivas diseñadas para capturar emoción en vivo y generar ingresos significativos durante tus eventos.
-			</p>
-		</div>
-		
-		<!-- Filters -->
-		<div class="filters flex gap-3 mb-16 flex-wrap">
-			<button class="filter-btn active px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 bg-brand-cyan text-brand-dark hover:shadow-glow-sm">
-				Todas
-			</button>
-			<button class="filter-btn px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 bg-surface-secondary text-text-secondary border border-surface-tertiary hover:border-brand-cyan hover:text-brand-cyan">
-				F&B
-			</button>
-			<button class="filter-btn px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 bg-surface-secondary text-text-secondary border border-surface-tertiary hover:border-brand-cyan hover:text-brand-cyan">
-				Locales
-			</button>
-		</div>
-		
-		<!-- Feed Grid -->
-		<div class="feed-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-			<!-- Card 1 -->
-			<div class="feed-card group relative bg-surface-primary border border-surface-tertiary rounded-2xl overflow-hidden hover:border-brand-cyan transition-all duration-500 hover:shadow-card-hover">
-				<div class="card-video relative h-72 overflow-hidden bg-surface-secondary">
-					<img src="/assets/experiences/experiencia-ejemplo1.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Menú Dinámico Flash" />
-					<div class="absolute inset-0 bg-gradient-to-t from-brand-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-				</div>
-				<div class="card-content p-8 relative">
-					<div class="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1 bg-brand-cyan/10 border border-brand-cyan/30 rounded-lg">
-						<span class="text-xs font-semibold text-brand-cyan">F&B</span>
-					</div>
-					<h3 class="text-2xl font-bold font-display text-text-primary mb-3 group-hover:text-brand-cyan transition-colors duration-300">
-						Menú Dinámico Flash
-					</h3>
-					<p class="text-sm text-text-secondary mb-6 leading-relaxed font-light">
-						Activación digital interactiva para impulsar ventas de alimentos y bebidas en tiempo real.
-					</p>
-					<a href="/experiencias/menu-dinamico" class="inline-flex items-center gap-2 bg-brand-cyan text-brand-dark px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 hover:shadow-glow-sm group/link">
-						<span>Explorar</span>
-						<svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-						</svg>
-					</a>
-				</div>
-			</div>
-			
-			<!-- Card 2 -->
-			<div class="feed-card group relative bg-surface-primary border border-surface-tertiary rounded-2xl overflow-hidden hover:border-brand-cyan transition-all duration-500 hover:shadow-card-hover">
-				<div class="card-video relative h-72 overflow-hidden bg-surface-secondary">
-					<img src="/assets/experiences/experiencia-ejemplo2.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Gritómetro de Dominio" />
-					<div class="absolute inset-0 bg-gradient-to-t from-brand-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-				</div>
-				<div class="card-content p-8 relative">
-					<div class="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1 bg-brand-purple/10 border border-brand-purple/30 rounded-lg">
-						<span class="text-xs font-semibold text-brand-purple">Gamificación</span>
-					</div>
-					<h3 class="text-2xl font-bold font-display text-text-primary mb-3 group-hover:text-brand-purple transition-colors duration-300">
-						Gritómetro de Dominio
-					</h3>
-					<p class="text-sm text-text-secondary mb-6 leading-relaxed font-light">
-						Medidor interactivo que gamifica la emoción en vivo y crea momentos memorables.
-					</p>
-					<a href="/experiencias/gritometro-dominio" class="inline-flex items-center gap-2 bg-brand-purple text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 hover:shadow-glow-md group/link">
-						<span>Explorar</span>
-						<svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-						</svg>
-					</a>
-				</div>
-			</div>
-			
-			<!-- Card 3 -->
-			<div class="feed-card group relative bg-surface-primary border border-surface-tertiary rounded-2xl overflow-hidden hover:border-brand-cyan transition-all duration-500 hover:shadow-card-hover">
-				<div class="card-video relative h-72 overflow-hidden bg-surface-secondary">
-					<img src="/assets/experiences/experiencia-ejemplo3.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Termómetro de Tensión" />
-					<div class="absolute inset-0 bg-gradient-to-t from-brand-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-				</div>
-				<div class="card-content p-8 relative">
-					<div class="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1 bg-brand-pink/10 border border-brand-pink/30 rounded-lg">
-						<span class="text-xs font-semibold text-brand-pink">Interactiva</span>
-					</div>
-					<h3 class="text-2xl font-bold font-display text-text-primary mb-3 group-hover:text-brand-pink transition-colors duration-300">
-						Termómetro de Tensión
-					</h3>
-					<p class="text-sm text-text-secondary mb-6 leading-relaxed font-light">
-						Medidor interactivo que visualiza el nivel de adrenalina del público en tiempo real.
-					</p>
-					<a href="/experiencias/termometro-tension" class="inline-flex items-center gap-2 bg-brand-pink text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 hover:shadow-lg group/link">
-						<span>Explorar</span>
-						<svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-						</svg>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
+
+<section id="experiencias" class="experiences relative py-24 bg-black/40">
+  <div class="container relative z-10 max-w-6xl mx-auto px-6 md:px-12">
+    <div class="mb-12">
+      <h2 class="section-title text-6xl md:text-7xl font-black leading-tight mb-4 text-white">
+        EXPERIENCIAS
+      </h2>
+      <p class="section-subtitle text-lg text-gray-400 max-w-2xl">
+        Catálogo dinámico de experiencias interactivas.
+      </p>
+    </div>
+
+    <div id="experiences-grid" class="feed-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6">
+        <p class="text-gray-400">Cargando experiencias...</p>
+      </article>
+    </div>
+  </div>
 </section>
 
 <script>
-	document.addEventListener('DOMContentLoaded', function() {
-		const filterBtns = document.querySelectorAll('.filter-btn');
-		const feedCards = document.querySelectorAll('.feed-card');
+  import { getExperiences } from '../lib/firebase/database';
 
-		filterBtns.forEach(btn => {
-			btn.addEventListener('click', function() {
-				// Remove active class from all buttons
-				filterBtns.forEach(b => {
-					b.classList.remove('active', 'bg-brand-cyan', 'text-brand-dark');
-					b.classList.add('bg-surface-secondary', 'text-text-secondary', 'border', 'border-surface-tertiary');
-				});
-				
-				// Add active class to clicked button
-				this.classList.add('active', 'bg-brand-cyan', 'text-brand-dark');
-				this.classList.remove('bg-surface-secondary', 'text-text-secondary', 'border', 'border-surface-tertiary');
+  const grid = document.querySelector('#experiences-grid');
+  const fallbackImage = '/assets/experiences/experiencia-ejemplo1.jpg';
 
-				const filterText = this.textContent.toLowerCase().trim();
-				const filterMap = {
-					'todas': 'all',
-					'f&b': 'fnb',
-					'locales': 'locales'
-				};
-				const filterValue = filterMap[filterText] || 'all';
+  const normalize = (value: string) =>
+    value
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
 
-				feedCards.forEach(card => {
-					const categories = card.getAttribute('data-category').split(' ');
-					
-					if (filterValue === 'all' || categories.includes(filterValue)) {
-						card.style.display = 'block';
-						card.classList.add('animate-scale-in');
-					} else {
-						card.style.display = 'none';
-					}
-				});
-			});
-		});
-	});
+  const resolveDetailPath = (uid: string) => {
+    return `/experiencias/${uid}`;
+  };
+
+  const render = async () => {
+    if (!(grid instanceof HTMLDivElement)) return;
+
+    try {
+      const experiences = await getExperiences();
+      const visibleExperiences = experiences.filter((exp) => exp.visible === true);
+
+      if (!visibleExperiences.length) {
+        grid.innerHTML = `
+          <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6">
+            <p class="text-gray-400">Aún no hay experiencias publicadas.</p>
+          </article>
+        `;
+        return;
+      }
+
+      grid.innerHTML = visibleExperiences
+        .map(
+          (exp) => `
+          <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden hover:border-white transition-all duration-500">
+            <div class="card-video relative h-64 overflow-hidden bg-gray-900">
+              <img
+                src="${exp.image || fallbackImage}"
+                alt="${exp.experiencia}"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+            </div>
+            <div class="card-content p-8">
+              <h3 class="text-2xl font-black text-white mb-3">${exp.experiencia}</h3>
+              <p class="text-sm text-gray-400">${exp.descripcionDetallada}</p>
+              <a
+                href="${resolveDetailPath(exp.uid)}"
+                class="inline-block mt-6 bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-black font-bold px-5 py-2 rounded-full hover:scale-105 transition-transform duration-300"
+              >
+                Explorar
+              </a>
+            </div>
+          </article>
+        `
+        )
+        .join('');
+    } catch (error) {
+      console.error('Error cargando experiencias:', error);
+      grid.innerHTML = `
+        <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6">
+          <p class="text-red-400">No se pudieron cargar las experiencias.</p>
+        </article>
+      `;
+    }
+  };
+
+  render();
 </script>
 
 <style>
-	.section-title {
-		text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-	}
-
-	.feed-card {
-		animation: slideUp 0.6s ease-out forwards;
-	}
-
-	@keyframes slideUp {
-		from {
-			opacity: 0;
-			transform: translateY(20px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
+  .section-title {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
 </style>
-

@@ -18,6 +18,10 @@ pnpm-lock.yaml
 .env.*.local
 .env.production.local
 
+# Firebase Admin credentials (NUNCA versionar)
+*-firebase-adminsdk-*.json
+geniality-sas-dev-firebase-adminsdk-kkjr3-a93a608264.json
+
 # IDE files
 .vscode/
 .idea/

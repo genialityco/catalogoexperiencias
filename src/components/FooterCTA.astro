@@ -1,5 +1,6 @@
 ---
 // Footer & Contact section
+import ContactForm from './ContactForm.astro';
 ---
 
 <section class="footer-cta relative py-32 md:py-48" id="contacto">
@@ -25,47 +26,9 @@
 		</div>
 
 		<!-- Form -->
-		<form class="contact-form bg-gradient-to-br from-surface-primary to-surface-secondary border border-surface-tertiary rounded-2xl p-8 md:p-12 space-y-6 mb-12">
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-				<div class="form-group">
-					<label for="nombre" class="block text-text-primary font-semibold mb-2 text-sm">Nombre Completo</label>
-					<input type="text" id="nombre" name="nombre" class="w-full bg-surface-secondary border border-surface-tertiary text-text-primary rounded-xl px-4 py-3 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/50 transition-all placeholder-text-tertiary" placeholder="Tu nombre" required>
-				</div>
-				<div class="form-group">
-					<label for="empresa" class="block text-text-primary font-semibold mb-2 text-sm">Empresa / Venue</label>
-					<input type="text" id="empresa" name="empresa" class="w-full bg-surface-secondary border border-surface-tertiary text-text-primary rounded-xl px-4 py-3 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/50 transition-all placeholder-text-tertiary" placeholder="Nombre del lugar" required>
-				</div>
-			</div>
-
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-				<div class="form-group">
-					<label for="tipo" class="block text-text-primary font-semibold mb-2 text-sm">¿Eres Venue o Agencia?</label>
-					<select id="tipo" name="tipo" class="w-full bg-surface-secondary border border-surface-tertiary text-text-primary rounded-xl px-4 py-3 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/50 transition-all" required>
-						<option value="">Selecciona una opción</option>
-						<option value="venue">Venue (Hotel/Bar/Estadio)</option>
-						<option value="agencia">Agencia/Productora</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="interes" class="block text-text-primary font-semibold mb-2 text-sm">¿Qué te Interesa?</label>
-					<select id="interes" name="interes" class="w-full bg-surface-secondary border border-surface-tertiary text-text-primary rounded-xl px-4 py-3 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/50 transition-all" required>
-						<option value="">Selecciona una opción</option>
-						<option value="individual">Experiencia Individual</option>
-						<option value="completo">Ecosistema Completo</option>
-						<option value="alianza">Alianza Estratégica</option>
-					</select>
-				</div>
-			</div>
-
-			<div class="form-group">
-				<label for="mensaje" class="block text-text-primary font-semibold mb-2 text-sm">Mensaje (Opcional)</label>
-				<textarea id="mensaje" name="mensaje" rows="4" class="w-full bg-surface-secondary border border-surface-tertiary text-text-primary rounded-xl px-4 py-3 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/50 transition-all placeholder-text-tertiary" placeholder="Cuéntanos más..."></textarea>
-			</div>
-
-			<button type="submit" class="w-full bg-brand-cyan text-brand-dark font-bold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-glow-sm hover:scale-105 mt-8">
-				Enviar Consulta
-			</button>
-		</form>
+		<div class="contact-form-card mb-12">
+			<ContactForm submitLabel="Enviar Consulta" />
+		</div>
 
 		<!-- Contact Info -->
 		<div class="text-center">
@@ -87,14 +50,12 @@
 		background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
 	}
 
-	.form-group input::placeholder,
-	.form-group textarea::placeholder {
-		color: rgb(148, 163, 184);
-	}
-
-	.form-group input:focus::placeholder,
-	.form-group textarea:focus::placeholder {
-		color: rgb(148, 163, 184);
+	.contact-form-card {
+		padding: 2rem;
+		border: 1px solid rgba(0, 255, 255, 0.25);
+		border-radius: 18px;
+		background: rgba(15, 52, 96, 0.25);
+		backdrop-filter: blur(6px);
 	}
 
 	@media (max-width: 768px) {

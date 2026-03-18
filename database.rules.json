@@ -1,0 +1,22 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "leads": {
+      ".read": false,
+      "$leadId": {
+        ".write": "!data.exists()",
+        ".validate": "newData.hasChildren(['name','email','message','createdAt']) && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 120 && newData.child('email').isString() && newData.child('email').val().length > 0 && newData.child('email').val().length <= 120 && (!newData.child('phone').exists() || (newData.child('phone').isString() && newData.child('phone').val().length <= 40)) && (!newData.child('company').exists() || (newData.child('company').isString() && newData.child('company').val().length <= 120)) && newData.child('message').isString() && newData.child('message').val().length > 0 && newData.child('message').val().length <= 2000 && newData.child('createdAt').exists() && newData.childrenCount() <= 6"
+      }
+    },
+
+    "experiences": {
+      ".read": true,
+      "$uid": {
+        ".write": true,
+        ".validate": "newData.hasChildren(['uid','experiencia','descripcionDetallada','pitchComercial','tecnologia','objetivo','costo','visible','createdAt']) && newData.child('uid').isString() && newData.child('uid').val() == $uid && newData.child('experiencia').isString() && newData.child('experiencia').val().length > 0 && newData.child('experiencia').val().length <= 160 && newData.child('descripcionDetallada').isString() && newData.child('descripcionDetallada').val().length > 0 && newData.child('descripcionDetallada').val().length <= 4000 && newData.child('pitchComercial').isString() && newData.child('pitchComercial').val().length > 0 && newData.child('pitchComercial').val().length <= 2000 && newData.child('tecnologia').isString() && newData.child('tecnologia').val().length > 0 && newData.child('tecnologia').val().length <= 200 && newData.child('objetivo').isString() && newData.child('objetivo').val().length > 0 && newData.child('objetivo').val().length <= 200 && newData.child('costo').isString() && newData.child('costo').val().length > 0 && newData.child('costo').val().length <= 120 && newData.child('visible').isBoolean() && newData.child('createdAt').isNumber() && (!newData.child('image').exists() || newData.child('image').isString()) && newData.childrenCount() <= 10"
+      }
+    }
+  }
+}
