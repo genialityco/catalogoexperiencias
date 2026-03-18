@@ -30,14 +30,6 @@
 			</div>
 		</nav>
 	<section class="experience-detail">
-		<div class="hero-video">
-			<video autoplay muted loop playsinline preload="metadata" poster="/images/termometro-hero.jpg">
-				<source src="/videos/termometro-full.mp4" type="video/mp4">
-				<!-- Fallback image -->
-				<img src="/images/termometro-hero.jpg" alt="Termómetro de Tensión en acción">
-			</video>
-		</div>
-
 		<div class="content-container">
 			<div class="left-content">
 				<h1>Termómetro de Tensión</h1>
@@ -73,24 +65,7 @@
 <style>
 	.experience-detail {
 		min-height: 100vh;
-	}
-
-	.hero-video {
-		width: 100%;
-		aspect-ratio: 16 / 9;
-		height: min(60vh, 720px);
-		min-height: 320px;
-		overflow: hidden;
-		position: relative;
-	}
-
-	.hero-video video,
-	.hero-video img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: center;
-		display: block;
+		margin-top: 20px;
 	}
 
 	.content-container {
@@ -186,10 +161,6 @@
 		.content-container {
 			grid-template-columns: 1fr;
 			gap: 2rem;
-		}
-		.hero-video {
-			height: min(45vh, 420px);
-			min-height: 240px;
 		}
 		.left-content h1 {
 			font-size: 2rem;
