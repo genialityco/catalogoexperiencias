@@ -31,7 +31,7 @@
 		</nav>
 	<section class="experience-detail">
 		<div class="hero-video">
-			<video autoplay muted loop>
+			<video autoplay muted loop playsinline preload="metadata" poster="/images/termometro-hero.jpg">
 				<source src="/videos/termometro-full.mp4" type="video/mp4">
 				<!-- Fallback image -->
 				<img src="/images/termometro-hero.jpg" alt="Termómetro de Tensión en acción">
@@ -41,6 +41,9 @@
 		<div class="content-container">
 			<div class="left-content">
 				<h1>Termómetro de Tensión</h1>
+				<figure class="experience-image">
+					<img src="/assets/experiences/experiencia-ejemplo3.png" alt="Imagen destacada de Termómetro de Tensión" loading="eager" />
+				</figure>
 				<h2>El Concepto</h2>
 				<p>Durante el medio tiempo, los usuarios entran por QR y deben tocar la pantalla de su celular lo más rápido posible. La sumatoria de todos llena un tanque de presión en la pantalla principal; si estalla, se desbloquea una promoción general para todo el bar.</p>
 				<h2>El Logro Comercial</h2>
@@ -74,7 +77,9 @@
 
 	.hero-video {
 		width: 100%;
-		height: 60vh;
+		aspect-ratio: 16 / 9;
+		height: min(60vh, 720px);
+		min-height: 320px;
 		overflow: hidden;
 		position: relative;
 	}
@@ -84,6 +89,8 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+		object-position: center;
+		display: block;
 	}
 
 	.content-container {
@@ -105,6 +112,21 @@
 		font-size: 1.8rem;
 		color: #fff;
 		margin: 2rem 0 1rem 0;
+	}
+
+	.experience-image {
+		margin: 0 0 2rem;
+		border-radius: 18px;
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+	}
+
+	.experience-image img {
+		width: 100%;
+		height: clamp(240px, 40vw, 380px);
+		object-fit: cover;
+		display: block;
 	}
 
 	.left-content p {
@@ -166,7 +188,8 @@
 			gap: 2rem;
 		}
 		.hero-video {
-			height: 40vh;
+			height: min(45vh, 420px);
+			min-height: 240px;
 		}
 		.left-content h1 {
 			font-size: 2rem;

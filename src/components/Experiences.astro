@@ -47,7 +47,7 @@ import PixelReveal from './PixelReveal.jsx';
 					<p class="text-sm text-text-secondary mb-6 leading-relaxed font-light">
 						Activación digital interactiva para impulsar ventas de alimentos y bebidas en tiempo real.
 					</p>
-					<a href="/experiencias/menu-dinamico" class="inline-flex items-center gap-2 bg-brand-cyan text-brand-dark px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 hover:shadow-glow-sm group/link">
+					<a href="/experiencias/menu-dinamico" class="inline-flex items-center gap-2 bg-brand-cyan text-brand-dark px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 hover:shadow-glow-sm group/link" style="color: #000000;">
 						<span>Explorar</span>
 						<svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -111,11 +111,11 @@ import PixelReveal from './PixelReveal.jsx';
 
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
-		const filterBtns = document.querySelectorAll('.filter-btn');
-		const feedCards = document.querySelectorAll('.feed-card');
+		const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+		const feedCards = document.querySelectorAll<HTMLElement>('.feed-card');
 
 		filterBtns.forEach(btn => {
-			btn.addEventListener('click', function() {
+			btn.addEventListener('click', () => {
 				// Remove active class from all buttons
 				filterBtns.forEach(b => {
 					b.classList.remove('active', 'bg-brand-cyan', 'text-brand-dark');
@@ -123,11 +123,11 @@ import PixelReveal from './PixelReveal.jsx';
 				});
 				
 				// Add active class to clicked button
-				this.classList.add('active', 'bg-brand-cyan', 'text-brand-dark');
-				this.classList.remove('bg-surface-secondary', 'text-text-secondary', 'border', 'border-surface-tertiary');
+				btn.classList.add('active', 'bg-brand-cyan', 'text-brand-dark');
+				btn.classList.remove('bg-surface-secondary', 'text-text-secondary', 'border', 'border-surface-tertiary');
 
-				const filterText = this.textContent.toLowerCase().trim();
-				const filterMap = {
+				const filterText = (btn.textContent ?? '').toLowerCase().trim();
+				const filterMap: Record<string, string> = {
 					'todas': 'all',
 					'f&b': 'fnb',
 					'locales': 'locales'
@@ -135,7 +135,7 @@ import PixelReveal from './PixelReveal.jsx';
 				const filterValue = filterMap[filterText] || 'all';
 
 				feedCards.forEach(card => {
-					const categories = card.getAttribute('data-category').split(' ');
+					const categories = (card.getAttribute('data-category') ?? '').split(' ');
 					
 					if (filterValue === 'all' || categories.includes(filterValue)) {
 						card.style.display = 'block';

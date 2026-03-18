@@ -45,6 +45,37 @@
 </html>
 
 <style>
+	:global(:root) {
+		color-scheme: dark;
+	}
+
+	:global(html),
+	:global(body) {
+		color: #f8fafc;
+		background-color: #0a0e27;
+	}
+
+	/* Fallback defensivo para utilidades de color usadas en la UI */
+	:global(.text-text-primary) {
+		color: #f8fafc !important;
+	}
+
+	:global(.text-text-secondary) {
+		color: #cbd5e1 !important;
+	}
+
+	:global(.text-text-tertiary) {
+		color: #94a3b8 !important;
+	}
+
+	:global(.text-gray-400) {
+		color: #9ca3af !important;
+	}
+
+	:global(.text-white) {
+		color: #ffffff !important;
+	}
+
 	.navbar {
 		position: fixed;
 		top: 0;
