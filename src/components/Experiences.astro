@@ -18,6 +18,12 @@
         <p class="text-gray-400">Cargando experiencias...</p>
       </article>
     </div>
+
+    <div class="carousel-controls" id="carousel-controls" hidden>
+      <button id="carousel-prev" class="carousel-btn" aria-label="Anterior">◀</button>
+      <div class="carousel-dots" id="carousel-dots"></div>
+      <button id="carousel-next" class="carousel-btn" aria-label="Siguiente">▶</button>
+    </div>
   </div>
 </section>
 
@@ -25,37 +31,36 @@
   import { getExperiences } from '../lib/firebase/database';
 
   const grid = document.querySelector('#experiences-grid');
+  const controls = document.querySelector('#carousel-controls');
+  const prevBtn = document.querySelector('#carousel-prev');
+  const nextBtn = document.querySelector('#carousel-next');
+  const dotsContainer = document.querySelector('#carousel-dots');
   const fallbackImage = '/assets/experiences/experiencia-ejemplo1.jpg';
 
-  const normalize = (value: string) =>
-    value
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
+  const itemsPerPage = 3;
+  let visibleExperiences: Array<{
+    uid: string;
+    experiencia: string;
+    descripcionDetallada: string;
+    image?: string;
+    visible: boolean;
+  }> = [];
+  let currentSlide = 0;
+  let totalSlides = 0;
 
   const resolveDetailPath = (uid: string) => {
     return `/experiencias/${uid}`;
   };
 
-  const render = async () => {
+  const renderCurrentPage = () => {
     if (!(grid instanceof HTMLDivElement)) return;
 
-    try {
-      const experiences = await getExperiences();
-      const visibleExperiences = experiences.filter((exp) => exp.visible === true);
+    const start = currentSlide * itemsPerPage;
+    const pageItems = visibleExperiences.slice(start, start + itemsPerPage);
 
-      if (!visibleExperiences.length) {
-        grid.innerHTML = `
-          <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6">
-            <p class="text-gray-400">Aún no hay experiencias publicadas.</p>
-          </article>
-        `;
-        return;
-      }
-
-      grid.innerHTML = visibleExperiences
-        .map(
-          (exp) => `
+    grid.innerHTML = pageItems
+      .map(
+        (exp) => `
           <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden hover:border-white transition-all duration-500">
             <div class="card-video relative h-64 overflow-hidden bg-gray-900">
               <img
@@ -76,17 +81,104 @@
             </div>
           </article>
         `
-        )
-        .join('');
-    } catch (error) {
-      console.error('Error cargando experiencias:', error);
-      grid.innerHTML = `
-        <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6">
-          <p class="text-red-400">No se pudieron cargar las experiencias.</p>
-        </article>
-      `;
+      )
+      .join('');
+
+    document.querySelectorAll('.carousel-dot').forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === currentSlide);
+    });
+
+    updateButtonStates();
+  };
+
+  const goToSlide = (index: number) => {
+    currentSlide = Math.max(0, Math.min(index, totalSlides - 1));
+    renderCurrentPage();
+  };
+
+  const nextSlide = () => {
+    if (currentSlide < totalSlides - 1) {
+      goToSlide(currentSlide + 1);
     }
   };
+
+  const prevSlide = () => {
+    if (currentSlide > 0) {
+      goToSlide(currentSlide - 1);
+    }
+  };
+
+  const render = async () => {
+    if (!(grid instanceof HTMLDivElement)) return;
+
+    try {
+      const experiences = await getExperiences();
+      visibleExperiences = experiences.filter((exp) => exp.visible === true);
+
+      if (!visibleExperiences.length) {
+        grid.innerHTML = `
+          <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6">
+            <p class="text-gray-400">Aún no hay experiencias publicadas.</p>
+          </article>
+        `;
+        return;
+      }
+
+      totalSlides = Math.ceil(visibleExperiences.length / itemsPerPage);
+
+      if (dotsContainer instanceof HTMLDivElement) {
+        dotsContainer.innerHTML = Array.from({ length: totalSlides })
+          .map((_, idx) => `<div class="carousel-dot ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`)
+          .join('');
+
+        document.querySelectorAll('.carousel-dot').forEach((dot) => {
+          dot.addEventListener('click', (e) => {
+            const index = parseInt((e.target as HTMLElement).getAttribute('data-index') || '0');
+            goToSlide(index);
+          });
+        });
+      }
+
+      if (controls instanceof HTMLElement) {
+        controls.hidden = totalSlides <= 1;
+      }
+
+      renderCurrentPage();
+    } catch (error) {
+      console.error('Error cargando experiencias:', error);
+      if (grid instanceof HTMLDivElement) {
+        grid.innerHTML = `
+          <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6">
+            <p class="text-red-400">No se pudieron cargar las experiencias.</p>
+          </article>
+        `;
+      }
+    }
+  };
+
+  const updateButtonStates = () => {
+    if (prevBtn instanceof HTMLButtonElement) {
+      prevBtn.disabled = currentSlide === 0;
+    }
+    if (nextBtn instanceof HTMLButtonElement) {
+      nextBtn.disabled = currentSlide >= totalSlides - 1;
+    }
+  };
+
+  // Event listeners
+  if (prevBtn instanceof HTMLButtonElement) {
+    prevBtn.addEventListener('click', () => {
+      prevSlide();
+      updateButtonStates();
+    });
+  }
+
+  if (nextBtn instanceof HTMLButtonElement) {
+    nextBtn.addEventListener('click', () => {
+      nextSlide();
+      updateButtonStates();
+    });
+  }
 
   render();
 </script>
@@ -94,5 +186,83 @@
 <style>
   .section-title {
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .carousel-controls {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .carousel-btn {
+    background: linear-gradient(45deg, #00ffff, #ff00ff);
+    color: #000;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .carousel-btn:hover:not(:disabled) {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  }
+
+  .carousel-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+
+  .carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .carousel-dot:hover {
+    background: rgba(0, 255, 255, 0.5);
+  }
+
+  .carousel-dot.active {
+    background: #00ffff;
+    border-color: #ff00ff;
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (max-width: 1024px) {
+    .carousel-btn {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .carousel-btn {
+      width: 36px;
+      height: 36px;
+      font-size: 0.9rem;
+    }
   }
 </style>

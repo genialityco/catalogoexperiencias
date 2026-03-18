@@ -195,10 +195,11 @@ import Layout from '../layouts/Layout.astro';
     }
   };
 
-  const openModal = () => {
+  const openModal = (options?: { resetForm?: boolean }) => {
+    const shouldReset = options?.resetForm ?? true;
     if (modal instanceof HTMLElement) {
       modal.hidden = false;
-      if (form instanceof HTMLFormElement) {
+      if (shouldReset && form instanceof HTMLFormElement) {
         form.reset();
         clearExperienceEditState();
       }
@@ -253,7 +254,7 @@ import Layout from '../layouts/Layout.astro';
       cancelEditButton.hidden = false;
     }
 
-    openModal();
+    openModal({ resetForm: false });
   };
 
   const setExperiencesStatus = (message: string, type: 'success' | 'error' = 'success') => {
@@ -362,7 +363,7 @@ import Layout from '../layouts/Layout.astro';
 
   // Event listeners para modal
   if (createBtn instanceof HTMLButtonElement) {
-    createBtn.addEventListener('click', openModal);
+    createBtn.addEventListener('click', () => openModal());
   }
 
   if (modalCloseBtn instanceof HTMLButtonElement) {
@@ -487,6 +488,15 @@ import Layout from '../layouts/Layout.astro';
         }
 
         if (imageFile instanceof File && imageFile.size > 0) {
+          const maxBytes = 5 * 1024 * 1024;
+          if (!imageFile.type.startsWith('image/')) {
+            throw new Error('El archivo seleccionado no es una imagen válida.');
+          }
+
+          if (imageFile.size >= maxBytes) {
+            throw new Error('La imagen supera 5MB. Sube una imagen más liviana para cumplir las reglas de Storage.');
+          }
+
           try {
             const upload = await uploadExperienceImage(uid, imageFile);
             image = upload.downloadUrl;
@@ -496,7 +506,7 @@ import Layout from '../layouts/Layout.astro';
               error.message.includes('STORAGE_UNAUTHORIZED:')
             ) {
               uploadWarning =
-                ' La imagen no se subió por permisos de Storage (403), pero la experiencia sí se guardó.';
+                ' La imagen no se subió por permisos de Storage (403). Verifica que las reglas de Storage estén desplegadas en el proyecto correcto. La experiencia sí se guardó sin imagen.';
             } else {
               throw error;
             }
@@ -532,15 +542,19 @@ import Layout from '../layouts/Layout.astro';
         clearExperienceEditState();
         closeModal();
         await renderExperiences();
-        status.textContent = wasEditing
+        const successMessage = wasEditing
           ? `Experiencia actualizada correctamente.${uploadWarning}`
           : `Experiencia creada correctamente.${uploadWarning}`;
+        status.textContent = successMessage;
         status.classList.add('success');
+        setExperiencesStatus(successMessage, uploadWarning ? 'error' : 'success');
       } catch (error) {
         console.error('Error creando experiencia:', error);
-        status.textContent =
+        const errorMessage =
           error instanceof Error ? error.message : 'No se pudo crear la experiencia.';
+        status.textContent = errorMessage;
         status.classList.add('error');
+        setExperiencesStatus(errorMessage, 'error');
       } finally {
         if (submitButton instanceof HTMLButtonElement) submitButton.disabled = false;
         if (cancelEditButton instanceof HTMLButtonElement) cancelEditButton.disabled = false;
