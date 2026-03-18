@@ -2,51 +2,81 @@
 // Footer & Contact section
 ---
 
-<section class="footer-cta relative py-32" id="contacto">
-	<div class="footer-background absolute inset-0 bg-cover bg-center" style="background-image: url('/assets/footer-image.png');">
-		<div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+<section class="footer-cta relative py-32 md:py-48" id="contacto">
+	<!-- Background -->
+	<div class="absolute inset-0 overflow-hidden">
+		<div class="absolute -top-40 right-0 w-96 h-96 bg-brand-purple/10 rounded-full blur-3xl"></div>
+		<div class="absolute -bottom-32 left-0 w-96 h-96 bg-brand-cyan/10 rounded-full blur-3xl"></div>
+		<div class="absolute inset-0 bg-gradient-to-br from-brand-dark via-surface-primary to-brand-dark"></div>
 	</div>
-	<div class="container relative z-10 max-w-4xl mx-auto px-6 md:px-12">
-		<h2 class="cta-title text-6xl md:text-7xl font-black leading-tight mb-12 text-white">
-			PROTEGE TU
-			<br />
-			<span class="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">RENTABILIDAD</span>
-		</h2>
-		<form class="contact-form bg-black/80 backdrop-blur-sm border border-gray-800 rounded-xl p-8 md:p-12 space-y-6">
-			<div class="form-group">
-				<label for="nombre" class="block text-white font-bold mb-2 text-sm">Nombre Completo</label>
-				<input type="text" id="nombre" name="nombre" class="w-full bg-gray-900 text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-white transition-colors" required>
+
+	<!-- Content -->
+	<div class="relative z-10 max-w-5xl mx-auto px-6 md:px-12">
+		<!-- Header -->
+		<div class="text-center mb-16">
+			<h2 class="text-5xl md:text-6xl font-black font-display leading-tight mb-6 text-text-primary">
+				MULTIPLICA
+				<br />
+				<span class="bg-gradient-to-r from-brand-cyan via-brand-accent to-brand-purple bg-clip-text text-transparent">TU RENTABILIDAD</span>
+			</h2>
+			<p class="text-lg text-text-secondary max-w-2xl mx-auto font-light">
+				Cuéntanos sobre tu venue o agencia. Diseñaremos una solución personalizada para maximizar ingresos.
+			</p>
+		</div>
+
+		<!-- Form -->
+		<form class="contact-form bg-gradient-to-br from-surface-primary to-surface-secondary border border-surface-tertiary rounded-2xl p-8 md:p-12 space-y-6 mb-12">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div class="form-group">
+					<label for="nombre" class="block text-text-primary font-semibold mb-2 text-sm">Nombre Completo</label>
+					<input type="text" id="nombre" name="nombre" class="w-full bg-surface-secondary border border-surface-tertiary text-text-primary rounded-xl px-4 py-3 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/50 transition-all placeholder-text-tertiary" placeholder="Tu nombre" required>
+				</div>
+				<div class="form-group">
+					<label for="empresa" class="block text-text-primary font-semibold mb-2 text-sm">Empresa / Venue</label>
+					<input type="text" id="empresa" name="empresa" class="w-full bg-surface-secondary border border-surface-tertiary text-text-primary rounded-xl px-4 py-3 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/50 transition-all placeholder-text-tertiary" placeholder="Nombre del lugar" required>
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="empresa" class="block text-white font-bold mb-2 text-sm">Empresa / Venue</label>
-				<input type="text" id="empresa" name="empresa" class="w-full bg-gray-900 text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-white transition-colors" required>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div class="form-group">
+					<label for="tipo" class="block text-text-primary font-semibold mb-2 text-sm">¿Eres Venue o Agencia?</label>
+					<select id="tipo" name="tipo" class="w-full bg-surface-secondary border border-surface-tertiary text-text-primary rounded-xl px-4 py-3 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/50 transition-all" required>
+						<option value="">Selecciona una opción</option>
+						<option value="venue">Venue (Hotel/Bar/Estadio)</option>
+						<option value="agencia">Agencia/Productora</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="interes" class="block text-text-primary font-semibold mb-2 text-sm">¿Qué te Interesa?</label>
+					<select id="interes" name="interes" class="w-full bg-surface-secondary border border-surface-tertiary text-text-primary rounded-xl px-4 py-3 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/50 transition-all" required>
+						<option value="">Selecciona una opción</option>
+						<option value="individual">Experiencia Individual</option>
+						<option value="completo">Ecosistema Completo</option>
+						<option value="alianza">Alianza Estratégica</option>
+					</select>
+				</div>
 			</div>
+
 			<div class="form-group">
-				<label for="tipo" class="block text-white font-bold mb-2 text-sm">¿Eres un Venue o Agencia?</label>
-				<select id="tipo" name="tipo" class="w-full bg-gray-900 text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-white transition-colors" required>
-					<option value="">Selecciona una opción</option>
-					<option value="venue">Venue (Hotel/Bar)</option>
-					<option value="agencia">Agencia/Productora</option>
-				</select>
+				<label for="mensaje" class="block text-text-primary font-semibold mb-2 text-sm">Mensaje (Opcional)</label>
+				<textarea id="mensaje" name="mensaje" rows="4" class="w-full bg-surface-secondary border border-surface-tertiary text-text-primary rounded-xl px-4 py-3 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/50 transition-all placeholder-text-tertiary" placeholder="Cuéntanos más..."></textarea>
 			</div>
-			<div class="form-group">
-				<label for="interes" class="block text-white font-bold mb-2 text-sm">¿Qué te interesa?</label>
-				<select id="interes" name="interes" class="w-full bg-gray-900 text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-white transition-colors" required>
-					<option value="">Selecciona una opción</option>
-					<option value="individual">Experiencia individual</option>
-					<option value="completo">Ecosistema Completo</option>
-					<option value="alianza">Alianza</option>
-				</select>
-			</div>
-			<button type="submit" class="btn-submit w-full bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-100 transition-colors mt-8">
+
+			<button type="submit" class="w-full bg-brand-cyan text-brand-dark font-bold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-glow-sm hover:scale-105 mt-8">
 				Enviar Consulta
 			</button>
 		</form>
-		<div class="contact-info mt-12 text-center">
-			<p class="text-gray-400 text-sm mb-4">O contacta directamente:</p>
-			<div class="space-y-2">
-				<div class="text-white font-bold">WhatsApp: +57 300 216 2757</div>
-				<div class="text-white font-bold">juan.lopez@geniality.com.co</div>
+
+		<!-- Contact Info -->
+		<div class="text-center">
+			<p class="text-text-secondary text-sm mb-6 font-light">¿Prefieres contactar directamente?</p>
+			<div class="space-y-3">
+				<div class="text-text-primary font-semibold">
+					<span class="text-brand-cyan">WhatsApp:</span> +57 300 216 2757
+				</div>
+				<div class="text-text-primary font-semibold">
+					<span class="text-brand-cyan">Email:</span> juan.lopez@geniality.com.co
+				</div>
 			</div>
 		</div>
 	</div>
@@ -54,123 +84,22 @@
 
 <style>
 	.footer-cta {
-		padding: 5rem 0;
-		background: linear-gradient(135deg, #000 0%, #111 100%);
-		position: relative;
+		background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
 	}
 
-	.footer-cta::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><polygon points="0,20 50,0 100,20" fill="%23000" opacity="0.8"/></svg>') repeat-x;
-		background-size: 100px 20px;
-		opacity: 0.3;
+	.form-group input::placeholder,
+	.form-group textarea::placeholder {
+		color: rgb(148, 163, 184);
 	}
 
-	.container {
-		max-width: 800px;
-		margin: 0 auto;
-		padding: 0 2rem;
-		position: relative;
-		z-index: 2;
-		text-align: center;
-	}
-
-	.cta-title {
-		font-size: 2rem;
-		font-weight: 700;
-		color: #fff;
-		margin-bottom: 3rem;
-		line-height: 1.4;
-		text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-	}
-
-	.contact-form {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-		gap: 1rem;
-		margin-bottom: 3rem;
-	}
-
-	.form-group {
-		text-align: left;
-		display: flex;
-		flex-direction: column;
-	}
-
-	.form-group label {
-		color: #fff;
-		font-size: 0.9rem;
-		margin-bottom: 0.5rem;
-		font-weight: 500;
-	}
-
-	.form-group input,
-	.form-group select {
-		width: 100%;
-		padding: 1rem;
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.05);
-		color: #fff;
-		font-size: 1rem;
-		transition: border-color 0.3s;
-	}
-
-	.form-group input::placeholder {
-		color: #aaa;
-	}
-
-	.form-group input:focus,
-	.form-group select:focus {
-		outline: none;
-		border-color: #00ffff;
-	}
-
-	.btn-submit {
-		grid-column: 1 / -1;
-		background: linear-gradient(45deg, #00ffff, #ff00ff);
-		color: #000;
-		border: none;
-		padding: 1rem 2rem;
-		border-radius: 50px;
-		font-size: 1.1rem;
-		font-weight: 600;
-		cursor: pointer;
-		transition: transform 0.3s;
-		margin-top: 1rem;
-	}
-
-	.btn-submit:hover {
-		transform: scale(1.05);
-	}
-
-	.contact-info {
-		border-top: 1px solid rgba(255, 255, 255, 0.1);
-		padding-top: 2rem;
-		margin-top: 3rem;
-	}
-
-	.contact-item {
-		color: #ccc;
-		margin: 0.5rem 0;
-		font-size: 1rem;
-	}
-
-	.contact-item strong {
-		color: #00ffff;
+	.form-group input:focus::placeholder,
+	.form-group textarea:focus::placeholder {
+		color: rgb(148, 163, 184);
 	}
 
 	@media (max-width: 768px) {
-		.contact-form {
-			grid-template-columns: 1fr;
-		}
-		.cta-title {
-			font-size: 1.5rem;
+		.footer-cta h2 {
+			font-size: 2.5rem;
 		}
 	}
 </style>

@@ -2,131 +2,77 @@
 // BTL Corner section - El Rincón del BTL y Productoras
 ---
 
-<section class="btl-corner" id="btl">
-	<div class="container">
-		<h2 class="section-title">¿Produces eventos o diseñas licitaciones? Seamos aliados estratégicos.</h2>
-		<p class="intro-text">
+<section class="btl-corner relative py-32 md:py-48 overflow-hidden" id="btl">
+	<!-- Background gradient -->
+	<div class="absolute inset-0 bg-gradient-to-br from-surface-primary via-surface-secondary to-surface-primary"></div>
+	<div class="absolute top-0 right-0 w-80 h-80 bg-brand-purple/5 rounded-full blur-3xl"></div>
+	<div class="absolute bottom-0 left-0 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl"></div>
+
+	<!-- Content -->
+	<div class="relative z-10 max-w-4xl mx-auto px-6 md:px-12 text-center">
+		<!-- Title -->
+		<h2 class="text-5xl md:text-6xl font-black font-display leading-tight mb-8 text-text-primary">
+			¿Produces eventos o diseñas
+			<br />
+			<span class="bg-gradient-to-r from-brand-cyan via-brand-accent to-brand-purple bg-clip-text text-transparent">licitaciones?</span>
+		</h2>
+
+		<!-- Subtitle -->
+		<p class="text-lg md:text-xl text-text-secondary leading-relaxed font-light mb-12 max-w-2xl mx-auto">
 			Conocemos la presión del en vivo. Te entregamos tecnología robusta en formato "marca blanca" para que la integres sin fricción en las propuestas de tus clientes.
 		</p>
-		<div class="value-checklist">
-			<div class="check-item">
-				<span class="check-icon">✓</span>
+
+		<!-- Value Checklist -->
+		<div class="space-y-4 mb-12">
+			<div class="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-brand-cyan/10 border border-brand-cyan/30 text-text-primary font-medium">
+				<svg class="w-5 h-5 text-brand-cyan flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+					<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+				</svg>
 				<span>Márgenes claros para tu rentabilidad</span>
 			</div>
-			<div class="check-item">
-				<span class="check-icon">✓</span>
+			<div class="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-brand-purple/10 border border-brand-purple/30 text-text-primary font-medium">
+				<svg class="w-5 h-5 text-brand-purple flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+					<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+				</svg>
 				<span>Hardware industrial calibrado</span>
 			</div>
-			<div class="check-item">
-				<span class="check-icon">✓</span>
-				<span>Soporte presencial disponible como upgrade para garantizar la tranquilidad de tu equipo</span>
+			<div class="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-brand-pink/10 border border-brand-pink/30 text-text-primary font-medium">
+				<svg class="w-5 h-5 text-brand-pink flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+					<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+				</svg>
+				<span>Soporte presencial para garantizar tranquilidad</span>
 			</div>
 		</div>
-		<div class="cta-container">
-			<a href="#contacto" class="btn-cta">Descargar Fichas Técnicas para Licitaciones</a>
-		</div>
+
+		<!-- CTA Button -->
+		<a href="#contacto" class="inline-flex items-center gap-2 px-8 py-4 bg-brand-cyan text-brand-dark rounded-xl font-bold transition-all duration-300 hover:shadow-glow-sm hover:scale-105">
+			<span>Descargar Fichas Técnicas</span>
+			<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+			</svg>
+		</a>
 	</div>
 </section>
 
 <style>
 	.btl-corner {
-		padding: 5rem 0;
-		background: linear-gradient(135deg, #000 0%, #111 50%, #000 100%);
-		position: relative;
+		background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
 	}
 
-	.btl-corner::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0, 0, 0, 0.8);
-	}
-
-	.container {
-		max-width: 1000px;
-		margin: 0 auto;
-		padding: 0 2rem;
-		position: relative;
-		z-index: 2;
-		text-align: center;
-	}
-
-	.section-title {
-		font-size: 2.5rem;
-		font-weight: 700;
-		color: #fff;
-		margin-bottom: 1rem;
-		line-height: 1.3;
-	}
-
-	.intro-text {
-		font-size: 1.2rem;
-		color: #ccc;
-		margin-bottom: 3rem;
-		line-height: 1.6;
-		max-width: 800px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	.value-checklist {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-		margin-bottom: 3rem;
-		align-items: center;
-	}
-
-	.check-item {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		font-size: 1.1rem;
-		color: #fff;
-		max-width: 600px;
-	}
-
-	.check-icon {
-		color: #00ffff;
-		font-size: 1.5rem;
-		font-weight: bold;
-		flex-shrink: 0;
-	}
-
-	.cta-container {
-		margin-top: 2rem;
-	}
-
-	.btn-cta {
-		display: inline-block;
-		background: linear-gradient(45deg, #00ffff, #ff00ff);
-		color: #000;
-		padding: 1rem 2rem;
-		border-radius: 50px;
-		text-decoration: none;
-		font-weight: 600;
-		font-size: 1.1rem;
-		transition: transform 0.3s;
-	}
-
-	.btn-cta:hover {
-		transform: scale(1.05);
+	@keyframes slideUp {
+		from {
+			opacity: 0;
+			transform: translateY(30px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 
 	@media (max-width: 768px) {
-		.section-title {
-			font-size: 2rem;
-		}
-		.value-checklist {
-			align-items: flex-start;
-		}
-		.check-item {
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.5rem;
+		.btl-corner h2 {
+			font-size: 2.5rem;
 		}
 	}
 </style>
