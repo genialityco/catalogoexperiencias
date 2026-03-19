@@ -6,8 +6,8 @@ import FooterCTA from "../components/FooterCTA.astro";
 
 <Layout>
   <main class="page-content">
-    <section class="hero-section">
-      <div class="container">
+    <section class="hero-section text-center">
+      <div class="container flex flex-col items-center text-center">
         <h1>Hablemos</h1>
         <p>
           ¿Listo para revolucionar tu venue durante el Mundial 2026? Nuestro
@@ -17,10 +17,10 @@ import FooterCTA from "../components/FooterCTA.astro";
     </section>
 
     <section class="contact-section">
-      <div class="container">
-        <div class="contact-info">
+      <div class="container flex flex-col items-center text-center">
+        <div class="contact-info w-full">
           <h2>Información de Contacto</h2>
-          <div class="contact-details">
+          <div class="contact-details flex flex-col md:flex-row justify-center items-center text-center gap-8">
             <div class="contact-item">
               <h3>📞 Teléfono</h3>
               <p>+57 300 216 2757</p>
@@ -40,9 +40,9 @@ import FooterCTA from "../components/FooterCTA.astro";
           </div>
         </div>
 
-        <div class="why-contact">
+        <div class="why-contact w-full">
           <h2>¿Por qué contactarnos?</h2>
-          <ul>
+          <ul class="list-disc list-inside text-center mx-auto">
             <li>Consultoría gratuita y personalizada para tu venue</li>
             <li>Análisis detallado de ROI potencial</li>
             <li>Propuesta técnica adaptada a tus necesidades</li>
@@ -51,13 +51,11 @@ import FooterCTA from "../components/FooterCTA.astro";
           </ul>
         </div>
 
-        <div class="contact-form-card">
-          <h2>Cuéntanos sobre tu evento</h2>
-          <ContactForm />
+        <div class="form-section w-full flex flex-col items-center text-center">
+          <ContactForm submitLabel="Enviar Consulta" />
         </div>
       </div>
     </section>
-
     <FooterCTA />
   </main>
 </Layout>

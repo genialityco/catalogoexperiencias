@@ -4,19 +4,19 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout>
 	<main class="page-content">
-		<section class="hero-section">
-			<div class="container">
+		<section class="hero-section text-center">
+			<div class="container flex flex-col items-center text-center">
 				<h1>El Ecosistema Geniality</h1>
 				<p>Una plataforma integral de experiencias interactivas para venues durante eventos deportivos.</p>
 			</div>
 		</section>
 
 		<section class="content-section">
-			<div class="container">
+			<div class="container flex flex-col items-center text-center">
 				<h2>Arquitectura del Ecosistema</h2>
 				<p>Nuestro ecosistema está diseñado para crear una experiencia inmersiva que combina tecnología de vanguardia con la emoción natural del fútbol.</p>
 
-				<div class="ecosystem-components">
+				<div class="ecosystem-components flex flex-col md:flex-row justify-center items-center text-center gap-8">
 					<div class="component">
 						<h3>🎯 Hardware Inteligente</h3>
 						<p>Pantallas táctiles, sensores ambientales y dispositivos IoT que responden en tiempo real a la transmisión del partido.</p>
@@ -36,7 +36,7 @@ import Layout from '../layouts/Layout.astro';
 				</div>
 
 				<h2>Beneficios del Ecosistema</h2>
-				<ul class="benefits">
+				<ul class="benefits list-disc list-inside text-center mx-auto">
 					<li>Incremento significativo en el tiempo de permanencia del público</li>
 					<li>Aumento en las ventas de alimentos y bebidas</li>
 					<li>Generación de leads cualificados para marketing</li>
