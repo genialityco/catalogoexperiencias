@@ -38,12 +38,27 @@ export default function ScrollAnimations() {
       opacity: 0,
       y: 80,
       duration: 1,
-      stagger: 0.2,
+      stagger: 0.2, // Añadido para animaciones más fluidas
       ease: 'power3.out',
       scrollTrigger: {
         trigger: '.pitch-cards',
-        start: 'top 85%',
+        start: 'top 90%',
+        end: 'bottom 10%',
         toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Nueva animación para desplazamiento horizontal
+    gsap.to('.horizontal-scroll', {
+      x: '-50%',
+      duration: 2,
+      ease: 'power2.inOut',
+      scrollTrigger: {
+        trigger: '.horizontal-scroll',
+        start: 'top center',
+        end: 'bottom center',
+        scrub: true,
+        pin: true,
       }
     });
 

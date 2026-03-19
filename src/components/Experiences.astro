@@ -5,264 +5,292 @@
 <section id="experiencias" class="experiences relative py-24 bg-black/40">
   <div class="container relative z-10 max-w-6xl mx-auto px-6 md:px-12">
     <div class="mb-12">
-      <h2 class="section-title text-6xl md:text-7xl font-black leading-tight mb-4 text-white">
+      <h2
+        class="section-title text-6xl md:text-7xl font-black leading-tight mb-4 text-white"
+      >
         EXPERIENCIAS
       </h2>
-      <p class="section-subtitle text-lg text-gray-400 max-w-2xl">
-        Catálogo dinámico de experiencias interactivas.
-      </p>
-    </div>
-
-    <div id="experiences-grid" class="feed-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6">
-        <p class="text-gray-400">Cargando experiencias...</p>
-      </article>
-    </div>
-
-    <div class="carousel-controls" id="carousel-controls" hidden>
-      <button id="carousel-prev" class="carousel-btn" aria-label="Anterior">◀</button>
-      <div class="carousel-dots" id="carousel-dots"></div>
-      <button id="carousel-next" class="carousel-btn" aria-label="Siguiente">▶</button>
-    </div>
-  </div>
-</section>
-
-<script>
-  import { getExperiences } from '../lib/firebase/database';
-
-  const grid = document.querySelector('#experiences-grid');
-  const controls = document.querySelector('#carousel-controls');
-  const prevBtn = document.querySelector('#carousel-prev');
-  const nextBtn = document.querySelector('#carousel-next');
-  const dotsContainer = document.querySelector('#carousel-dots');
-  const fallbackImage = '/assets/experiences/experiencia-ejemplo1.jpg';
-
-  const itemsPerPage = 3;
-  let visibleExperiences: Array<{
-    uid: string;
-    experiencia: string;
-    descripcionDetallada: string;
-    image?: string;
-    visible: boolean;
-  }> = [];
-  let currentSlide = 0;
-  let totalSlides = 0;
-
-  const resolveDetailPath = (uid: string) => {
-    return `/experiencias/${uid}`;
-  };
-
-  const renderCurrentPage = () => {
-    if (!(grid instanceof HTMLDivElement)) return;
-
-    const start = currentSlide * itemsPerPage;
-    const pageItems = visibleExperiences.slice(start, start + itemsPerPage);
-
-    grid.innerHTML = pageItems
-      .map(
-        (exp) => `
-          <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden hover:border-white transition-all duration-500">
-            <div class="card-video relative h-64 overflow-hidden bg-gray-900">
-              <img
-                src="${exp.image || fallbackImage}"
-                alt="${exp.experiencia}"
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-            </div>
-            <div class="card-content p-8">
-              <h3 class="text-2xl font-black text-white mb-3">${exp.experiencia}</h3>
-              <p class="text-sm text-gray-400">${exp.descripcionDetallada}</p>
-              <a
-                href="${resolveDetailPath(exp.uid)}"
-                class="inline-block mt-6 bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-black font-bold px-5 py-2 rounded-full hover:scale-105 transition-transform duration-300"
-              >
-                Explorar
-              </a>
-            </div>
+      <div>
+        <div
+          id="experiences-grid"
+          class="feed-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <article
+            class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6"
+          >
+            <p class="text-gray-400">Cargando experiencias...</p>
           </article>
-        `
-      )
-      .join('');
+        </div>
 
-    document.querySelectorAll('.carousel-dot').forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === currentSlide);
-    });
+        <div class="carousel-controls" id="carousel-controls" hidden>
+          <button id="carousel-prev" class="carousel-btn" aria-label="Anterior"
+            >◀</button
+          >
+          <div class="carousel-dots" id="carousel-dots"></div>
+          <button id="carousel-next" class="carousel-btn" aria-label="Siguiente"
+            >▶</button
+          >
+        </div>
+      </div>
+    </div>
 
-    updateButtonStates();
-  };
+    <script>
+      import { getExperiences } from "../lib/firebase/database";
 
-  const goToSlide = (index: number) => {
-    currentSlide = Math.max(0, Math.min(index, totalSlides - 1));
-    renderCurrentPage();
-  };
+      const grid = document.querySelector("#experiences-grid");
+      const controls = document.querySelector("#carousel-controls");
+      const prevBtn = document.querySelector("#carousel-prev");
+      const nextBtn = document.querySelector("#carousel-next");
+      const dotsContainer = document.querySelector("#carousel-dots");
+      const fallbackImage = "/assets/experiences/experiencia-ejemplo1.jpg";
 
-  const nextSlide = () => {
-    if (currentSlide < totalSlides - 1) {
-      goToSlide(currentSlide + 1);
-    }
-  };
+      const itemsPerPage = 3;
+      let visibleExperiences: Array<{
+        uid: string;
+        experiencia: string;
+        descripcionDetallada: string;
+        image?: string;
+        visible: boolean;
+      }> = [];
+      let currentSlide = 0;
+      let totalSlides = 0;
 
-  const prevSlide = () => {
-    if (currentSlide > 0) {
-      goToSlide(currentSlide - 1);
-    }
-  };
+      const resolveDetailPath = (uid: string) => {
+        return `/experiencias/${uid}`;
+      };
 
-  const render = async () => {
-    if (!(grid instanceof HTMLDivElement)) return;
+      const renderCurrentPage = () => {
+        if (!(grid instanceof HTMLDivElement)) return;
 
-    try {
-      const experiences = await getExperiences();
-      visibleExperiences = experiences.filter((exp) => exp.visible === true);
+        const start = currentSlide * itemsPerPage;
+        const pageItems = visibleExperiences.slice(start, start + itemsPerPage);
 
-      if (!visibleExperiences.length) {
-        grid.innerHTML = `
+        grid.innerHTML = pageItems
+          .map(
+            (exp) => `
+         <article class="feed-card group relative bg-black border border-gray-800 rounded-2xl overflow-hidden hover:border-white transition-all duration-500 h-full flex flex-col">
+  <div class="card-video relative h-64 overflow-hidden bg-gray-900 flex-shrink-0">
+    <img
+      src="${exp.image || fallbackImage}"
+      alt="${exp.experiencia}"
+      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+    />
+  </div>
+
+  <div class="card-content p-8 flex flex-col flex-1">
+    <h3 class="text-2xl font-black text-white mb-3 line-clamp-2">
+      ${exp.experiencia}
+    </h3>
+
+    <p class="text-sm text-gray-400 line-clamp-4 mb-4">
+      ${exp.descripcionDetallada}
+    </p>
+
+    <a
+      href="${resolveDetailPath(exp.uid)}"
+      class="inline-block mt-auto bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-black font-bold px-5 py-2 rounded-full hover:scale-105 transition-transform duration-300 self-start"
+    >
+      Explorar
+    </a>
+  </div>
+</article>
+        `,
+          )
+          .join("");
+
+        document.querySelectorAll(".carousel-dot").forEach((dot, idx) => {
+          dot.classList.toggle("active", idx === currentSlide);
+        });
+
+        updateButtonStates();
+      };
+
+      const goToSlide = (index: number) => {
+        currentSlide = Math.max(0, Math.min(index, totalSlides - 1));
+        renderCurrentPage();
+
+        // Evitar el desplazamiento vertical no deseado
+        if (controls) {
+          controls.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      };
+
+      const nextSlide = () => {
+        if (currentSlide < totalSlides - 1) {
+          goToSlide(currentSlide + 1);
+        }
+      };
+
+      const prevSlide = () => {
+        if (currentSlide > 0) {
+          goToSlide(currentSlide - 1);
+        }
+      };
+
+      const render = async () => {
+        if (!(grid instanceof HTMLDivElement)) return;
+
+        try {
+          const experiences = await getExperiences();
+          visibleExperiences = experiences.filter(
+            (exp) => exp.visible === true,
+          );
+
+          if (!visibleExperiences.length) {
+            grid.innerHTML = `
           <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6">
             <p class="text-gray-400">Aún no hay experiencias publicadas.</p>
           </article>
         `;
-        return;
-      }
+            return;
+          }
 
-      totalSlides = Math.ceil(visibleExperiences.length / itemsPerPage);
+          totalSlides = Math.ceil(visibleExperiences.length / itemsPerPage);
 
-      if (dotsContainer instanceof HTMLDivElement) {
-        dotsContainer.innerHTML = Array.from({ length: totalSlides })
-          .map((_, idx) => `<div class="carousel-dot ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`)
-          .join('');
+          if (dotsContainer instanceof HTMLDivElement) {
+            dotsContainer.innerHTML = Array.from({ length: totalSlides })
+              .map(
+                (_, idx) =>
+                  `<div class="carousel-dot ${idx === 0 ? "active" : ""}" data-index="${idx}"></div>`,
+              )
+              .join("");
 
-        document.querySelectorAll('.carousel-dot').forEach((dot) => {
-          dot.addEventListener('click', (e) => {
-            const index = parseInt((e.target as HTMLElement).getAttribute('data-index') || '0');
-            goToSlide(index);
-          });
-        });
-      }
+            document.querySelectorAll(".carousel-dot").forEach((dot) => {
+              dot.addEventListener("click", (e) => {
+                const index = parseInt(
+                  (e.target as HTMLElement).getAttribute("data-index") || "0",
+                );
+                goToSlide(index);
+              });
+            });
+          }
 
-      if (controls instanceof HTMLElement) {
-        controls.hidden = totalSlides <= 1;
-      }
+          if (controls instanceof HTMLElement) {
+            controls.hidden = totalSlides <= 1;
+          }
 
-      renderCurrentPage();
-    } catch (error) {
-      console.error('Error cargando experiencias:', error);
-      if (grid instanceof HTMLDivElement) {
-        grid.innerHTML = `
+          renderCurrentPage();
+        } catch (error) {
+          console.error("Error cargando experiencias:", error);
+          if (grid instanceof HTMLDivElement) {
+            grid.innerHTML = `
           <article class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6">
             <p class="text-red-400">No se pudieron cargar las experiencias.</p>
           </article>
         `;
+          }
+        }
+      };
+
+      const updateButtonStates = () => {
+        if (prevBtn instanceof HTMLButtonElement) {
+          prevBtn.disabled = currentSlide === 0;
+        }
+        if (nextBtn instanceof HTMLButtonElement) {
+          nextBtn.disabled = currentSlide >= totalSlides - 1;
+        }
+      };
+
+      // Event listeners
+      if (prevBtn instanceof HTMLButtonElement) {
+        prevBtn.addEventListener("click", () => {
+          prevSlide();
+          updateButtonStates();
+        });
       }
-    }
-  };
 
-  const updateButtonStates = () => {
-    if (prevBtn instanceof HTMLButtonElement) {
-      prevBtn.disabled = currentSlide === 0;
-    }
-    if (nextBtn instanceof HTMLButtonElement) {
-      nextBtn.disabled = currentSlide >= totalSlides - 1;
-    }
-  };
+      if (nextBtn instanceof HTMLButtonElement) {
+        nextBtn.addEventListener("click", () => {
+          nextSlide();
+          updateButtonStates();
+        });
+      }
 
-  // Event listeners
-  if (prevBtn instanceof HTMLButtonElement) {
-    prevBtn.addEventListener('click', () => {
-      prevSlide();
-      updateButtonStates();
-    });
-  }
+      render();
+    </script>
 
-  if (nextBtn instanceof HTMLButtonElement) {
-    nextBtn.addEventListener('click', () => {
-      nextSlide();
-      updateButtonStates();
-    });
-  }
+    <style>
+      .section-title {
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      }
 
-  render();
-</script>
+      .carousel-controls {
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+      }
 
-<style>
-  .section-title {
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  }
+      .carousel-btn {
+        background: linear-gradient(45deg, #00ffff, #ff00ff);
+        color: #000;
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-  .carousel-controls {
-    margin-top: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-  }
+      .carousel-btn:hover:not(:disabled) {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      }
 
-  .carousel-btn {
-    background: linear-gradient(45deg, #00ffff, #ff00ff);
-    color: #000;
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
+      .carousel-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
 
-  .carousel-btn:hover:not(:disabled) {
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-  }
+      .carousel-dots {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+      }
 
-  .carousel-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
+      .carousel-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+      }
 
-  .carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 2rem;
-  }
+      .carousel-dot:hover {
+        background: rgba(0, 255, 255, 0.5);
+      }
 
-  .carousel-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-  }
+      .carousel-dot.active {
+        background: #00ffff;
+        border-color: #ff00ff;
+        width: 16px;
+        height: 16px;
+      }
 
-  .carousel-dot:hover {
-    background: rgba(0, 255, 255, 0.5);
-  }
+      @media (max-width: 1024px) {
+        .carousel-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 1rem;
+        }
+      }
 
-  .carousel-dot.active {
-    background: #00ffff;
-    border-color: #ff00ff;
-    width: 16px;
-    height: 16px;
-  }
-
-  @media (max-width: 1024px) {
-    .carousel-btn {
-      width: 40px;
-      height: 40px;
-      font-size: 1rem;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .carousel-btn {
-      width: 36px;
-      height: 36px;
-      font-size: 0.9rem;
-    }
-  }
-</style>
+      @media (max-width: 640px) {
+        .carousel-btn {
+          width: 36px;
+          height: 36px;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </div>
+</section>

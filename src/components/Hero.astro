@@ -72,17 +72,29 @@ import EnergyAura from './EnergyAura.jsx';
 <style>
 	.hero-content {
 		animation: slideUp 0.8s ease-out forwards;
+		text-align: center;
 	}
 
-	@keyframes slideUp {
-		from {
-			opacity: 0;
-			transform: translateY(40px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
+	.hero-content h1 {
+		text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+	}
+
+	.hero-content h2 {
+		text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+	}
+
+	.hero-content p {
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 1.2rem;
+		line-height: 1.8;
+	}
+
+	.hero-content a {
+		box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+	}
+
+	.hero-content a:hover {
+		box-shadow: 0 6px 20px rgba(0, 255, 255, 0.5);
 	}
 
 	:global(html) {
