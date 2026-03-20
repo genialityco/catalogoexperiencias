@@ -86,6 +86,11 @@ import Layout from '../layouts/Layout.astro';
                 <input type="file" name="image" accept="image/*" />
               </label>
 
+              <label>
+                Segunda Imagen (opcional)
+                <input type="file" name="secondImage" accept="image/*" />
+              </label>
+
               <label class="check-row">
                 <input type="checkbox" name="visible" checked />
                 Visible en catálogo
@@ -139,6 +144,7 @@ import Layout from '../layouts/Layout.astro';
     costo: string;
     visible: boolean;
     image?: string;
+    secondImage?: string;
     createdAt?: number;
   }
 
@@ -230,6 +236,7 @@ import Layout from '../layouts/Layout.astro';
     const costoInput = getInputByName('costo');
     const visibleInput = getInputByName('visible');
     const imageInput = getInputByName('image');
+    const secondImageInput = getInputByName('secondImage');
     const descripcionTextarea = getTextareaByName('descripcionDetallada');
     const pitchTextarea = getTextareaByName('pitchComercial');
 
@@ -463,6 +470,7 @@ import Layout from '../layouts/Layout.astro';
         const costo = String(formData.get('costo') ?? '').trim();
         const visible = formData.get('visible') === 'on';
         const imageFile = formData.get('image');
+        const secondImageFile = formData.get('secondImage');
         const uid = editingUid || generateUid(experiencia);
 
         if (
@@ -477,6 +485,7 @@ import Layout from '../layouts/Layout.astro';
         }
 
         let image = '';
+        let secondImage: string | undefined;
         let uploadWarning = '';
 
         const editingExperience = editingUid
@@ -486,7 +495,11 @@ import Layout from '../layouts/Layout.astro';
         if (editingExperience?.image) {
           image = editingExperience.image;
         }
+        if (editingExperience?.secondImage) {
+          secondImage = editingExperience.secondImage;
+        }
 
+        // Procesar imagen principal
         if (imageFile instanceof File && imageFile.size > 0) {
           const maxBytes = 5 * 1024 * 1024;
           if (!imageFile.type.startsWith('image/')) {
@@ -513,7 +526,39 @@ import Layout from '../layouts/Layout.astro';
           }
         }
 
+        // Procesar segunda imagen
+        if (secondImageFile instanceof File && secondImageFile.size > 0) {
+          const maxBytes = 5 * 1024 * 1024;
+          if (!secondImageFile.type.startsWith('image/')) {
+            throw new Error('El archivo de la segunda imagen no es válido.');
+          }
+
+          if (secondImageFile.size >= maxBytes) {
+            throw new Error('La segunda imagen supera 5MB. Sube una imagen más liviana.');
+          }
+
+          try {
+            const secondImageName = `${uid}-second`;
+            const upload = await uploadExperienceImage(secondImageName, secondImageFile);
+            secondImage = upload.downloadUrl;
+          } catch (error) {
+            if (
+              error instanceof Error &&
+              error.message.includes('STORAGE_UNAUTHORIZED:')
+            ) {
+              uploadWarning =
+                ' La segunda imagen no se subió por permisos de Storage (403). La experiencia sí se guardó sin la segunda imagen.';
+            } else {
+              throw error;
+            }
+          }
+        }
+
         if (editingUid) {
+          const existingExperience = experiencesCache.find((exp) => exp.uid === editingUid);
+          const currentImage = existingExperience?.image;
+          const currentSecondImage = existingExperience?.secondImage;
+
           await updateExperience(uid, {
             experiencia,
             descripcionDetallada,
@@ -522,7 +567,8 @@ import Layout from '../layouts/Layout.astro';
             objetivo,
             costo,
             visible,
-            image,
+            image: image || currentImage,
+            secondImage: secondImage || currentSecondImage,
           });
         } else {
           await createExperience({
@@ -535,6 +581,7 @@ import Layout from '../layouts/Layout.astro';
             costo,
             visible,
             image,
+            secondImage,
           });
         }
 

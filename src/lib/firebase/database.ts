@@ -61,6 +61,7 @@ export interface ExperiencePayload {
   costo: string;
   visible: boolean;
   image?: string;
+  secondImage?: string; // Nueva propiedad para la segunda imagen
 }
 
 export interface ExperienceItem extends ExperiencePayload {
