@@ -17,7 +17,7 @@ const hasRequiredFirebaseConfig =
 	Boolean(firebaseConfig.storageBucket);
 
 if (!hasRequiredFirebaseConfig) {
-	console.warn(
+	console.error(
 		'[Firebase] Faltan variables PUBLIC_FIREBASE_* requeridas para App/Firestore/Storage. Revisa tu archivo .env.'
 	);
 }

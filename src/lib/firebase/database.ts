@@ -158,21 +158,27 @@ export const deleteExperience = async (uid: string) => {
 };
 
 export const getExperiences = async (): Promise<ExperienceItem[]> => {
+  
   const experiencesQuery = query(
     collection(db, 'experiences'),
     orderBy('createdAt', 'desc')
   );
+  try {
+    
   const snapshot = await getDocs(experiencesQuery);
-
   return snapshot.docs.map((experienceDoc) => {
     const experience = experienceDoc.data() as ExperienceItem & {
       createdAt?: Timestamp | number;
     };
-
     return {
       ...experience,
       uid: experience.uid || experienceDoc.id,
       createdAt: toMillis(experience.createdAt),
     };
   });
-};
+
+  } catch (error) {
+    console.error("Error fetching experiences:", error);
+    return [];
+  }
+}

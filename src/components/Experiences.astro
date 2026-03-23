@@ -5,16 +5,11 @@
 <section id="experiencias" class="experiences relative py-24 bg-black/40">
   <div class="container relative z-10 max-w-6xl mx-auto px-6 md:px-12 flex flex-col items-center text-center">
     <div class="mb-12 w-full">
-      <h2
-        class="section-title text-6xl md:text-7xl font-black leading-tight mb-4 text-white text-center"
-      >
+      <h2 class="section-title text-6xl md:text-7xl font-black leading-tight mb-4 text-white text-center">
         EXPERIENCIAS
       </h2>
       <div>
-        <div
-          id="experiences-grid"
-          class="feed-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
+        <div id="experiences-grid" class="feed-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <article
             class="feed-card group relative bg-black border border-gray-800 rounded-lg overflow-hidden p-6 text-center"
           >
@@ -23,13 +18,9 @@
         </div>
 
         <div class="carousel-controls" id="carousel-controls" hidden>
-          <button id="carousel-prev" class="carousel-btn" aria-label="Anterior"
-            >◀</button
-          >
+          <button id="carousel-prev" class="carousel-btn" aria-label="Anterior">◀</button>
           <div class="carousel-dots" id="carousel-dots"></div>
-          <button id="carousel-next" class="carousel-btn" aria-label="Siguiente"
-            >▶</button
-          >
+          <button id="carousel-next" class="carousel-btn" aria-label="Siguiente">▶</button>
         </div>
       </div>
     </div>
@@ -44,7 +35,7 @@
       const dotsContainer = document.querySelector("#carousel-dots");
       const fallbackImage = "/assets/experiences/experiencia-ejemplo1.jpg";
 
-      const itemsPerPage = 3;
+      const itemsPerPage = 18;
       let visibleExperiences: Array<{
         uid: string;
         experiencia: string;
@@ -69,31 +60,36 @@
           .map(
             (exp) => `
          <article class="feed-card group relative bg-black border border-gray-800 rounded-2xl overflow-hidden hover:border-white transition-all duration-500 h-full flex flex-col">
-  <div class="card-video relative h-64 overflow-hidden bg-gray-900 flex-shrink-0">
-    <img
-      src="${exp.image || fallbackImage}"
-      alt="${exp.experiencia}"
-      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-    />
-  </div>
+                              <a
+                  href="${resolveDetailPath(exp.uid)}"
+                      >
+          <div class="card-video relative h-64 overflow-hidden bg-gray-900 flex-shrink-0">
+                
+                <img
+                  src="${exp.image || fallbackImage}"
+                  alt="${exp.experiencia}"
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+              </div>
 
-  <div class="card-content p-8 flex flex-col flex-1">
-    <h3 class="text-2xl font-black text-white mb-3 line-clamp-2">
-      ${exp.experiencia}
-    </h3>
+              <div class="card-content p-8 flex flex-col flex-1">
+                <h3 class="text-2xl font-black text-white mb-3 line-clamp-2">
+                  ${exp.experiencia}
+                </h3>
 
-    <p class="text-sm text-gray-400 line-clamp-4 mb-4">
-      ${exp.descripcionDetallada}
-    </p>
+                <p class="text-sm text-gray-400 line-clamp-4 mb-4">
+                  ${exp.descripcionDetallada}
+                </p>
 
-    <a
-      href="${resolveDetailPath(exp.uid)}"
-      class="inline-block mt-auto bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-black font-bold px-5 py-2 rounded-full hover:scale-105 transition-transform duration-300 self-start"
-    >
-      Explorar
-    </a>
-  </div>
-</article>
+                <a
+                  href="${resolveDetailPath(exp.uid)}"
+                  class="inline-block mt-auto bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-black font-bold px-5 py-2 rounded-full hover:scale-105 transition-transform duration-300 self-start"
+                >
+                  Explorar
+                </a>
+              </div>
+               </a>
+        </article>
         `,
           )
           .join("");
@@ -132,9 +128,7 @@
 
         try {
           const experiences = await getExperiences();
-          visibleExperiences = experiences.filter(
-            (exp) => exp.visible === true,
-          );
+          visibleExperiences = experiences.filter((exp) => exp.visible === true);
 
           if (!visibleExperiences.length) {
             grid.innerHTML = `
@@ -149,17 +143,12 @@
 
           if (dotsContainer instanceof HTMLDivElement) {
             dotsContainer.innerHTML = Array.from({ length: totalSlides })
-              .map(
-                (_, idx) =>
-                  `<div class="carousel-dot ${idx === 0 ? "active" : ""}" data-index="${idx}"></div>`,
-              )
+              .map((_, idx) => `<div class="carousel-dot ${idx === 0 ? "active" : ""}" data-index="${idx}"></div>`)
               .join("");
 
             document.querySelectorAll(".carousel-dot").forEach((dot) => {
               dot.addEventListener("click", (e) => {
-                const index = parseInt(
-                  (e.target as HTMLElement).getAttribute("data-index") || "0",
-                );
+                const index = parseInt((e.target as HTMLElement).getAttribute("data-index") || "0");
                 goToSlide(index);
               });
             });

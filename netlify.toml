@@ -4,7 +4,6 @@
   command = "npm run build"
   functions = "dist/functions"
   publish = "dist"
-  environment = { SECRETS_SCAN_SMART_DETECTION_ENABLED = "false" }
 
 [functions]
   node_bundler = "esbuild"
@@ -12,11 +11,6 @@
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/entry"
-  status = 200
-
-[[redirects]]
-  from = "/experiencias/*"
-  to = "/experiencias/[slug].html"
   status = 200
 
 # Cache configuration
