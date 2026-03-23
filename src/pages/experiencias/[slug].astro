@@ -1,6 +1,7 @@
 ---
 import { getExperiences } from "../../lib/firebase/database";
 import Navigation from "../../components/Navigation.astro";
+import ImplementationModes from "../../components/ImplementationModes.astro";
 
 export async function getStaticPaths() {
   const experiences = await getExperiences();
@@ -42,7 +43,7 @@ const secondImage = experience.secondImage || null;
           <div class="experience-image">
             <img src={posterImage} alt={experience.experiencia} />
           </div>
-          <h2>El Concepto</h2>
+          <!-- <h2>El Concepto</h2> -->
           <p>{experience.descripcionDetallada}</p>
           {
             secondImage && (
@@ -54,30 +55,32 @@ const secondImage = experience.secondImage || null;
               </div>
             )
           }
-          <h2>El Logro Comercial</h2>
+          <!-- <h2>El Logro Comercial</h2> -->
           <p>{experience.pitchComercial}</p>
         </div>
 
         <div class="right-content">
           <div class="specs-card">
             <h3>Ficha Técnica</h3>
-            <div class="spec-item">
+            <!-- <div class="spec-item">
               <strong>Objetivo Principal:</strong>
               {experience.objetivo}
-            </div>
+            </div> -->
             <div class="spec-item">
               <strong>Tecnología:</strong>
               {experience.tecnologia}
             </div>
-            <div class="spec-item">
+            <!-- <div class="spec-item">
               <strong>Inversión Base (1 Día):</strong>
               {experience.costo}
-            </div>
+            </div> -->
             <a href="/#contacto" class="btn-quote">Cotizar esta experiencia</a>
           </div>
         </div>
       </div>
     </section>
+    
+    <ImplementationModes />
   </body>
 </html>
 
