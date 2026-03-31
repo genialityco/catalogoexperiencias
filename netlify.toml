@@ -1,5 +1,6 @@
 # Netlify configuration for Astro project
-
+SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES=true
+SECRETS_SCAN_SMART_DETECTION_ENABLED=false
 [build]
   command = "npm run build"
   functions = "dist/functions"
