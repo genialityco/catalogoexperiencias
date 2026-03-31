@@ -3,24 +3,17 @@ import { getExperiences } from "../../lib/firebase/database";
 import Navigation from "../../components/Navigation.astro";
 import ImplementationModes from "../../components/ImplementationModes.astro";
 
-export async function getStaticPaths() {
-  const experiences = await getExperiences();
-  return experiences.map((exp) => ({
-    params: { slug: exp.uid },
-    props: { experience: exp },
-  }));
-}
+const { slug } = Astro.params;
 
-interface Props {
-  experience: any;
-}
+// Traer todas las experiencias y buscar la que coincida con el slug
+const experiences = await getExperiences();
+const experience =
+  experiences.find((exp: any) => String(exp.uid) === String(slug)) ?? null;
 
-const { experience } = Astro.props;
-
-// Generar URL de video basada en el uid o nombre
+// Generar URL de imagen con fallback seguro
 const fallbackImage = "/assets/experiences/experiencia-ejemplo1.jpg";
-const posterImage = experience.image || fallbackImage;
-const secondImage = experience.secondImage || null;
+const posterImage = experience?.image || fallbackImage;
+const secondImage = experience?.secondImage || null;
 ---
 
 <!doctype html>
@@ -31,56 +24,80 @@ const secondImage = experience.secondImage || null;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
-    <title>Geniality - {experience.experiencia}</title>
+    <title>
+      {
+        experience
+          ? `Geniality - ${experience.experiencia}`
+          : "Experiencia no encontrada"
+      }
+    </title>
   </head>
+
   <body class="bg-black text-white font-sans">
     <Navigation />
 
-    <section class="experience-detail pt-10" style="margin: 10px;">
-      <div class="content-container">
-        <div class="left-content">
-          <h1>{experience.experiencia}</h1>
-          <div class="experience-image">
-            <img src={posterImage} alt={experience.experiencia} />
-          </div>
-          <!-- <h2>El Concepto</h2> -->
-          <p>{experience.descripcionDetallada}</p>
-          {
-            secondImage && (
-              <div class="experience-image" style="margin-top: 1.5rem;">
-                <img
-                  src={secondImage}
-                  alt={`Segunda imagen de ${experience.experiencia}`}
-                />
-              </div>
-            )
-          }
-          <!-- <h2>El Logro Comercial</h2> -->
-          <p>{experience.pitchComercial}</p>
-        </div>
+    {
+      !experience ? (
+        <main style="background: #111; color: #fff; font-family: sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center;">
+          <h1 style="color: #00ffff; margin-bottom: 1rem;">
+            Experiencia no encontrada
+          </h1>
+          <p style="margin-bottom: 1rem;">
+            La experiencia solicitada no existe o ha sido eliminada.
+          </p>
+          <a
+            href="/experiencias"
+            style="color: #00ffff; text-decoration: underline;"
+          >
+            Volver al catálogo
+          </a>
+        </main>
+      ) : (
+        <>
+          <section class="experience-detail pt-10" style="margin: 10px;">
+            <div class="content-container">
+              <div class="left-content">
+                <h1>{experience.experiencia}</h1>
 
-        <div class="right-content">
-          <div class="specs-card">
-            <h3>Ficha Técnica</h3>
-            <!-- <div class="spec-item">
-              <strong>Objetivo Principal:</strong>
-              {experience.objetivo}
-            </div> -->
-            <div class="spec-item">
-              <strong>Tecnología:</strong>
-              {experience.tecnologia}
+                <div class="experience-image">
+                  <img src={posterImage} alt={experience.experiencia} />
+                </div>
+
+                <p>{experience.descripcionDetallada}</p>
+
+                {secondImage && (
+                  <div class="experience-image" style="margin-top: 1.5rem;">
+                    <img
+                      src={secondImage}
+                      alt={`Segunda imagen de ${experience.experiencia}`}
+                    />
+                  </div>
+                )}
+
+                <p>{experience.pitchComercial}</p>
+              </div>
+
+              <div class="right-content">
+                <div class="specs-card">
+                  <h3>Ficha Técnica</h3>
+
+                  <div class="spec-item">
+                    <strong>Tecnología:</strong>
+                    {experience.tecnologia}
+                  </div>
+
+                  <a href="/#contacto" class="btn-quote">
+                    Cotizar esta experiencia
+                  </a>
+                </div>
+              </div>
             </div>
-            <!-- <div class="spec-item">
-              <strong>Inversión Base (1 Día):</strong>
-              {experience.costo}
-            </div> -->
-            <a href="/#contacto" class="btn-quote">Cotizar esta experiencia</a>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <ImplementationModes />
+          </section>
+
+          <ImplementationModes />
+        </>
+      )
+    }
   </body>
 </html>
 
@@ -195,9 +212,11 @@ const secondImage = experience.secondImage || null;
       grid-template-columns: 1fr;
       gap: 2rem;
     }
+
     .hero-video {
       height: 40vh;
     }
+
     .left-content h1 {
       font-size: 2rem;
     }
