@@ -1,0 +1,1081 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <main class="admin-page">
+    <section class="admin-shell">
+      <aside class="sidebar">
+        <h1>Admin</h1>
+        <button class="side-btn active" data-tab="clientes">Clientes</button>
+        <button class="side-btn" data-tab="experiencias">Experiencias</button>
+      </aside>
+
+      <section class="content">
+        <article id="tab-clientes" class="tab-panel active">
+          <h2>Clientes (Leads)</h2>
+          <p class="hint">Listado obtenido desde Firebase Firestore.</p>
+          <div id="clients-list" class="clients-list"></div>
+        </article>
+
+        <article id="tab-experiencias" class="tab-panel">
+          <div class="exp-header">
+            <div>
+              <h2>Experiencias</h2>
+              <p class="hint">Tabla de todas las experiencias con acciones de visibilidad, edición y eliminación.</p>
+            </div>
+            <button id="create-experience-btn" class="btn-create">➕ Crear Experiencia</button>
+          </div>
+
+          <p id="experiences-status" class="status" aria-live="polite"></p>
+
+          <table id="experiences-table" class="experiences-table">
+            <thead>
+              <tr>
+                <th class="col-image">Imagen</th>
+                <th class="col-title">Experiencia</th>
+                <th class="col-actions">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="experiences-list"></tbody>
+          </table>
+        </article>
+
+        <!-- Modal para crear/editar experiencia -->
+        <div id="experience-modal" class="modal" hidden>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 id="experience-form-title">Crear experiencia</h3>
+              <button type="button" class="btn-close" id="modal-close">&times;</button>
+            </div>
+
+            <form id="experience-form" class="experience-form">
+              <p class="hint">El UID se genera automáticamente al guardar. Solo se publica en catálogo si <code>visible = true</code>.</p>
+
+              <div class="field-grid">
+                <label>
+                  Experiencia *
+                  <input type="text" name="experiencia" required />
+                </label>
+                <label>
+                  Tecnología *
+                  <input type="text" name="tecnologia" required />
+                </label>
+                <label>
+                  Objetivo *
+                  <input type="text" name="objetivo" required />
+                </label>
+                <label>
+                  Costo *
+                  <input type="text" name="costo" required />
+                </label>
+              </div>
+
+              <label>
+                Descripción Detallada *
+                <textarea name="descripcionDetallada" rows="4" required></textarea>
+              </label>
+
+              <label>
+                Pitch Comercial *
+                <textarea name="pitchComercial" rows="3" required></textarea>
+              </label>
+
+              <label>
+                Imagen (opcional)
+                <input type="file" name="image" accept="image/*" />
+              </label>
+
+              <label>
+                Segunda Imagen (opcional)
+                <input type="file" name="secondImage" accept="image/*" />
+              </label>
+
+              <label class="check-row">
+                <input type="checkbox" name="visible" checked />
+                Visible en catálogo
+              </label>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-submit" id="experience-submit-btn">Guardar experiencia</button>
+                <button type="button" class="btn-secondary" id="cancel-edit-btn" hidden>Cancelar edición</button>
+              </div>
+              <p id="experience-form-status" class="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import {
+    createExperience,
+    deleteExperience,
+    getExperiences,
+    getLeads,
+    toggleExperienceVisibility,
+    updateExperience,
+  } from '../lib/firebase/database';
+  import { uploadExperienceImage } from '../lib/firebase/storage';
+
+  const tabs = document.querySelectorAll('.side-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  const clientsList = document.querySelector('#clients-list');
+  const experiencesList = document.querySelector('#experiences-list');
+  const experiencesStatus = document.querySelector('#experiences-status');
+  const form = document.querySelector('#experience-form');
+  const status = document.querySelector('#experience-form-status');
+  const formTitle = document.querySelector('#experience-form-title');
+  const submitButton = document.querySelector('#experience-submit-btn');
+  const cancelEditButton = document.querySelector('#cancel-edit-btn');
+  const modal = document.querySelector('#experience-modal');
+  const createBtn = document.querySelector('#create-experience-btn');
+  const modalCloseBtn = document.querySelector('#modal-close');
+
+  interface AdminExperience {
+    uid: string;
+    experiencia: string;
+    descripcionDetallada: string;
+    pitchComercial: string;
+    tecnologia: string;
+    objetivo: string;
+    costo: string;
+    visible: boolean;
+    image?: string;
+    secondImage?: string;
+    createdAt?: number;
+  }
+
+  let experiencesCache: AdminExperience[] = [];
+  let editingUid: string | null = null;
+
+  const slugify = (value: string) =>
+    value
+      .toLowerCase()
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+  const generateUid = (title: string) => {
+    const base = slugify(title) || 'experiencia';
+    return `${base}-${Date.now()}`;
+  };
+
+  const escapeHtml = (value: string) =>
+    value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+
+  const getInputByName = (name: string): HTMLInputElement | null => {
+    if (!(form instanceof HTMLFormElement)) return null;
+    const field = form.elements.namedItem(name);
+    return field instanceof HTMLInputElement ? field : null;
+  };
+
+  const getTextareaByName = (name: string): HTMLTextAreaElement | null => {
+    if (!(form instanceof HTMLFormElement)) return null;
+    const field = form.elements.namedItem(name);
+    return field instanceof HTMLTextAreaElement ? field : null;
+  };
+
+  const clearExperienceEditState = () => {
+    editingUid = null;
+
+    if (formTitle instanceof HTMLHeadingElement) {
+      formTitle.textContent = 'Crear experiencia';
+    }
+
+    if (submitButton instanceof HTMLButtonElement) {
+      submitButton.textContent = 'Guardar experiencia';
+    }
+
+    if (cancelEditButton instanceof HTMLButtonElement) {
+      cancelEditButton.hidden = true;
+    }
+  };
+
+  const openModal = (options?: { resetForm?: boolean }) => {
+    const shouldReset = options?.resetForm ?? true;
+    if (modal instanceof HTMLElement) {
+      modal.hidden = false;
+      if (shouldReset && form instanceof HTMLFormElement) {
+        form.reset();
+        clearExperienceEditState();
+      }
+    }
+  };
+
+  const closeModal = () => {
+    if (modal instanceof HTMLElement) {
+      modal.hidden = true;
+      if (form instanceof HTMLFormElement) {
+        form.reset();
+        clearExperienceEditState();
+      }
+    }
+  };
+
+  const populateFormForEdit = (uid: string) => {
+    if (!(form instanceof HTMLFormElement)) return;
+
+    const experience = experiencesCache.find((item) => item.uid === uid);
+    if (!experience) return;
+
+    editingUid = uid;
+
+    const experienciaInput = getInputByName('experiencia');
+    const tecnologiaInput = getInputByName('tecnologia');
+    const objetivoInput = getInputByName('objetivo');
+    const costoInput = getInputByName('costo');
+    const visibleInput = getInputByName('visible');
+    const imageInput = getInputByName('image');
+    const secondImageInput = getInputByName('secondImage');
+    const descripcionTextarea = getTextareaByName('descripcionDetallada');
+    const pitchTextarea = getTextareaByName('pitchComercial');
+
+    if (experienciaInput) experienciaInput.value = experience.experiencia ?? '';
+    if (descripcionTextarea) descripcionTextarea.value = experience.descripcionDetallada ?? '';
+    if (pitchTextarea) pitchTextarea.value = experience.pitchComercial ?? '';
+    if (tecnologiaInput) tecnologiaInput.value = experience.tecnologia ?? '';
+    if (objetivoInput) objetivoInput.value = experience.objetivo ?? '';
+    if (costoInput) costoInput.value = experience.costo ?? '';
+    if (visibleInput) visibleInput.checked = Boolean(experience.visible);
+    if (imageInput) imageInput.value = '';
+
+    if (formTitle instanceof HTMLHeadingElement) {
+      formTitle.textContent = `Editar: ${experience.experiencia}`;
+    }
+
+    if (submitButton instanceof HTMLButtonElement) {
+      submitButton.textContent = 'Actualizar experiencia';
+    }
+
+    if (cancelEditButton instanceof HTMLButtonElement) {
+      cancelEditButton.hidden = false;
+    }
+
+    openModal({ resetForm: false });
+  };
+
+  const setExperiencesStatus = (message: string, type: 'success' | 'error' = 'success') => {
+    if (!(experiencesStatus instanceof HTMLParagraphElement)) return;
+
+    experiencesStatus.classList.remove('success', 'error');
+    experiencesStatus.textContent = message;
+    experiencesStatus.classList.add(type);
+  };
+
+  const renderExperiences = async () => {
+    if (!(experiencesList instanceof HTMLTableSectionElement)) return;
+
+    experiencesList.innerHTML = '<tr><td colspan="3" class="hint">Cargando experiencias...</td></tr>';
+
+    try {
+      const experiences = await getExperiences();
+      experiencesCache = experiences;
+
+      if (!experiences.length) {
+        experiencesList.innerHTML = '<tr><td colspan="3" class="hint">No hay experiencias registradas aún.</td></tr>';
+        return;
+      }
+
+      experiencesList.innerHTML = experiences
+        .map(
+          (experience) => `
+            <tr class="exp-row">
+              <td class="col-image">
+                <img src="${experience.image || '/assets/experiences/experiencia-ejemplo1.jpg'}" alt="${escapeHtml(experience.experiencia)}" class="exp-image" />
+              </td>
+              <td class="col-title">
+                <div class="exp-title">
+                  <h4>${escapeHtml(experience.experiencia || 'Sin nombre')}</h4>
+                  </div>
+              </td>
+              <td class="col-actions">
+                <div class="experience-actions">
+                  <button type="button" class="btn-row btn-toggle" data-action="toggle" data-uid="${experience.uid}" data-visible="${String(Boolean(experience.visible))}" title="${experience.visible ? 'Ocultar en catálogo' : 'Mostrar en catálogo'}">
+                    <span class="btn-icon">${experience.visible ? '👁️' : '🚫'}</span>
+                  </button>
+                  <button type="button" class="btn-row btn-edit" data-action="edit" data-uid="${experience.uid}" title="Editar información">
+                    <span class="btn-icon">✏️</span>
+                  </button>
+                  <button type="button" class="btn-row btn-delete" data-action="delete" data-uid="${experience.uid}" title="Eliminar experiencia">
+                    <span class="btn-icon">🗑️</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `
+        )
+        .join('');
+    } catch (error) {
+      console.error('Error cargando experiencias:', error);
+      experiencesList.innerHTML = '<tr><td colspan="3" class="error">No se pudieron cargar las experiencias.</td></tr>';
+    }
+  };
+
+  tabs.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      tabs.forEach((b) => b.classList.remove('active'));
+      tabPanels.forEach((panel) => panel.classList.remove('active'));
+
+      btn.classList.add('active');
+      const tabName = btn.getAttribute('data-tab');
+      const panel = document.querySelector(`#tab-${tabName}`);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  const renderClients = async () => {
+    if (!(clientsList instanceof HTMLDivElement)) return;
+
+    clientsList.innerHTML = '<p class="hint">Cargando clientes...</p>';
+
+    try {
+      const leads = await getLeads();
+
+      if (!leads.length) {
+        clientsList.innerHTML = '<p class="hint">No hay clientes registrados aún.</p>';
+        return;
+      }
+
+      clientsList.innerHTML = leads
+        .map(
+          (lead) => `
+            <article class="client-card">
+              <h3>${lead.name}</h3>
+              <p><strong>Email:</strong> ${lead.email}</p>
+              <p><strong>Teléfono:</strong> ${lead.phone || 'N/A'}</p>
+              <p><strong>Empresa:</strong> ${lead.company || 'N/A'}</p>
+              <p><strong>Mensaje:</strong> ${lead.message}</p>
+            </article>
+          `
+        )
+        .join('');
+    } catch (error) {
+      console.error('Error cargando clientes:', error);
+      clientsList.innerHTML = '<p class="error">No se pudieron cargar los clientes.</p>';
+    }
+  };
+
+  renderClients();
+  renderExperiences();
+
+  // Event listeners para modal
+  if (createBtn instanceof HTMLButtonElement) {
+    createBtn.addEventListener('click', () => openModal());
+  }
+
+  if (modalCloseBtn instanceof HTMLButtonElement) {
+    modalCloseBtn.addEventListener('click', closeModal);
+  }
+
+  if (modal instanceof HTMLElement) {
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+  }
+
+  if (cancelEditButton instanceof HTMLButtonElement && form instanceof HTMLFormElement) {
+    cancelEditButton.addEventListener('click', () => {
+      form.reset();
+      clearExperienceEditState();
+      closeModal();
+      status?.classList.remove('success', 'error');
+      if (status instanceof HTMLParagraphElement) {
+        status.textContent = '';
+      }
+    });
+  }
+
+  if (experiencesList instanceof HTMLTableSectionElement) {
+    experiencesList.addEventListener('click', async (event) => {
+      const target = event.target instanceof HTMLButtonElement ? event.target : (event.target as HTMLElement).closest('button');
+      if (!(target instanceof HTMLButtonElement)) return;
+
+      const action = target.dataset.action;
+      const uid = target.dataset.uid;
+
+      if (!action || !uid) return;
+
+      try {
+        target.disabled = true;
+
+        if (action === 'toggle') {
+          const isVisible = target.dataset.visible === 'true';
+          await toggleExperienceVisibility(uid, !isVisible);
+          setExperiencesStatus(
+            !isVisible ? 'Experiencia marcada como visible.' : 'Experiencia marcada como invisible.',
+            'success'
+          );
+          await renderExperiences();
+          return;
+        }
+
+        if (action === 'edit') {
+          populateFormForEdit(uid);
+          return;
+        }
+
+        if (action === 'delete') {
+          const confirmed = window.confirm('¿Seguro que deseas eliminar esta experiencia?');
+          if (!confirmed) return;
+
+          await deleteExperience(uid);
+          if (editingUid === uid && form instanceof HTMLFormElement) {
+            form.reset();
+            clearExperienceEditState();
+          }
+          setExperiencesStatus('Experiencia eliminada correctamente.', 'success');
+          await renderExperiences();
+        }
+      } catch (error) {
+        console.error('Error en acción de experiencia:', error);
+        setExperiencesStatus(
+          error instanceof Error ? error.message : 'No se pudo completar la acción.',
+          'error'
+        );
+      } finally {
+        target.disabled = false;
+      }
+    });
+  }
+
+  if (form instanceof HTMLFormElement && status instanceof HTMLParagraphElement) {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      status.classList.remove('success', 'error');
+      status.textContent = editingUid ? 'Actualizando experiencia...' : 'Guardando experiencia...';
+
+      if (submitButton instanceof HTMLButtonElement) submitButton.disabled = true;
+      if (cancelEditButton instanceof HTMLButtonElement) cancelEditButton.disabled = true;
+
+      try {
+        const wasEditing = Boolean(editingUid);
+        const formData = new FormData(form);
+        const experiencia = String(formData.get('experiencia') ?? '').trim();
+        const descripcionDetallada = String(formData.get('descripcionDetallada') ?? '').trim();
+        const pitchComercial = String(formData.get('pitchComercial') ?? '').trim();
+        const tecnologia = String(formData.get('tecnologia') ?? '').trim();
+        const objetivo = String(formData.get('objetivo') ?? '').trim();
+        const costo = String(formData.get('costo') ?? '').trim();
+        const visible = formData.get('visible') === 'on';
+        const imageFile = formData.get('image');
+        const secondImageFile = formData.get('secondImage');
+        const uid = editingUid || generateUid(experiencia);
+
+        if (
+          !experiencia ||
+          !descripcionDetallada ||
+          !pitchComercial ||
+          !tecnologia ||
+          !objetivo ||
+          !costo
+        ) {
+          throw new Error('Debes completar todos los campos obligatorios.');
+        }
+
+        let image = '';
+        let secondImage: string | undefined;
+        let uploadWarning = '';
+
+        const editingExperience = editingUid
+          ? experiencesCache.find((item) => item.uid === editingUid)
+          : null;
+
+        if (editingExperience?.image) {
+          image = editingExperience.image;
+        }
+        if (editingExperience?.secondImage) {
+          secondImage = editingExperience.secondImage;
+        }
+
+        // Procesar imagen principal
+        if (imageFile instanceof File && imageFile.size > 0) {
+          const maxBytes = 5 * 1024 * 1024;
+          if (!imageFile.type.startsWith('image/')) {
+            throw new Error('El archivo seleccionado no es una imagen válida.');
+          }
+
+          if (imageFile.size >= maxBytes) {
+            throw new Error('La imagen supera 5MB. Sube una imagen más liviana para cumplir las reglas de Storage.');
+          }
+
+          try {
+            const upload = await uploadExperienceImage(uid, imageFile);
+            image = upload.downloadUrl;
+          } catch (error) {
+            if (
+              error instanceof Error &&
+              error.message.includes('STORAGE_UNAUTHORIZED:')
+            ) {
+              uploadWarning =
+                ' La imagen no se subió por permisos de Storage (403). Verifica que las reglas de Storage estén desplegadas en el proyecto correcto. La experiencia sí se guardó sin imagen.';
+            } else {
+              throw error;
+            }
+          }
+        }
+
+        // Procesar segunda imagen
+        if (secondImageFile instanceof File && secondImageFile.size > 0) {
+          const maxBytes = 5 * 1024 * 1024;
+          if (!secondImageFile.type.startsWith('image/')) {
+            throw new Error('El archivo de la segunda imagen no es válido.');
+          }
+
+          if (secondImageFile.size >= maxBytes) {
+            throw new Error('La segunda imagen supera 5MB. Sube una imagen más liviana.');
+          }
+
+          try {
+            const secondImageName = `${uid}-second`;
+            const upload = await uploadExperienceImage(secondImageName, secondImageFile);
+            secondImage = upload.downloadUrl;
+          } catch (error) {
+            if (
+              error instanceof Error &&
+              error.message.includes('STORAGE_UNAUTHORIZED:')
+            ) {
+              uploadWarning =
+                ' La segunda imagen no se subió por permisos de Storage (403). La experiencia sí se guardó sin la segunda imagen.';
+            } else {
+              throw error;
+            }
+          }
+        }
+
+        if (editingUid) {
+          const existingExperience = experiencesCache.find((exp) => exp.uid === editingUid);
+          const currentImage = existingExperience?.image;
+          const currentSecondImage = existingExperience?.secondImage;
+
+          await updateExperience(uid, {
+            experiencia,
+            descripcionDetallada,
+            pitchComercial,
+            tecnologia,
+            objetivo,
+            costo,
+            visible,
+            image: image || currentImage,
+            secondImage: secondImage || currentSecondImage,
+          });
+        } else {
+          await createExperience({
+            uid,
+            experiencia,
+            descripcionDetallada,
+            pitchComercial,
+            tecnologia,
+            objetivo,
+            costo,
+            visible,
+            image,
+            secondImage,
+          });
+        }
+
+        form.reset();
+        clearExperienceEditState();
+        closeModal();
+        await renderExperiences();
+        const successMessage = wasEditing
+          ? `Experiencia actualizada correctamente.${uploadWarning}`
+          : `Experiencia creada correctamente.${uploadWarning}`;
+        status.textContent = successMessage;
+        status.classList.add('success');
+        setExperiencesStatus(successMessage, uploadWarning ? 'error' : 'success');
+      } catch (error) {
+        console.error('Error creando experiencia:', error);
+        const errorMessage =
+          error instanceof Error ? error.message : 'No se pudo crear la experiencia.';
+        status.textContent = errorMessage;
+        status.classList.add('error');
+        setExperiencesStatus(errorMessage, 'error');
+      } finally {
+        if (submitButton instanceof HTMLButtonElement) submitButton.disabled = false;
+        if (cancelEditButton instanceof HTMLButtonElement) cancelEditButton.disabled = false;
+      }
+    });
+  }
+</script>
+
+<style>
+  .admin-page {
+    padding-top: 80px;
+    min-height: 100vh;
+    background: #000;
+    color: #fff;
+  }
+
+  .admin-shell {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.25rem;
+    padding: 2rem;
+  }
+
+  .sidebar {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+  }
+
+  .sidebar h1 {
+    margin: 0 0 0.5rem;
+    color: #00ffff;
+    font-size: 1.3rem;
+  }
+
+  .side-btn {
+    padding: 0.7rem 0.9rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .side-btn.active {
+    background: linear-gradient(45deg, #00ffff, #ff00ff);
+    color: #000;
+    border-color: transparent;
+    font-weight: 700;
+  }
+
+  .content {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+
+  .tab-panel {
+    display: none;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+
+  .hint {
+    color: #bbbbbb;
+  }
+
+  .clients-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .client-card {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .client-card h3 {
+    margin: 0 0 0.6rem;
+    color: #00ffff;
+  }
+
+  .client-card p {
+    margin: 0.35rem 0;
+    color: #ddd;
+    font-size: 0.95rem;
+  }
+
+  .experience-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .experiences-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .experience-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  .experience-item h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #fff;
+  }
+
+  .experience-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+  }
+
+  .btn-row {
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 0.7rem 1.1rem;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    white-space: nowrap;
+  }
+
+  .btn-row:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .btn-icon {
+    font-size: 1.1rem;
+  }
+
+  .btn-label {
+    display: inline;
+  }
+
+  .btn-edit {
+    border-color: #00ffff;
+    background: rgba(0, 255, 255, 0.12);
+    color: #00ffff;
+  }
+
+  .btn-edit:hover:not(:disabled) {
+    background: rgba(0, 255, 255, 0.25);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .btn-delete {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.12);
+    color: #ff6b6b;
+  }
+
+  .btn-delete:hover:not(:disabled) {
+    background: rgba(255, 107, 107, 0.25);
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .btn-toggle {
+    border-color: #ff00ff;
+    background: rgba(255, 0, 255, 0.12);
+    color: #ff00ff;
+  }
+
+  .btn-toggle:hover:not(:disabled) {
+    background: rgba(255, 0, 255, 0.25);
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .section-divider {
+    margin: 1.5rem 0;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-secondary {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.75rem 1.1rem;
+    cursor: pointer;
+  }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .experience-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.95rem;
+  }
+
+  .experience-form input,
+  .experience-form textarea {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    font: inherit;
+  }
+
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .check-row input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    accent-color: #00ffff;
+  }
+
+  .btn-submit {
+    width: fit-content;
+    border: none;
+    border-radius: 999px;
+    padding: 0.75rem 1.2rem;
+    background: linear-gradient(45deg, #00ffff, #ff00ff);
+    color: #000;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.7;
+    cursor: wait;
+  }
+
+  .status {
+    min-height: 1.2rem;
+    margin: 0;
+  }
+
+  .status.success {
+    color: #5dff8a;
+  }
+
+  .status.error,
+  .error {
+    color: #ff7d7d;
+  }
+
+  @media (max-width: 900px) {
+    .admin-shell {
+      grid-template-columns: 1fr;
+      padding: 1rem;
+    }
+
+    .sidebar {
+      position: static;
+    }
+
+    .field-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .experience-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  /* Table styles */
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .btn-create {
+    background: linear-gradient(45deg, #00ff00, #00ffff);
+    color: #000;
+    border: none;
+    padding: 0.8rem 1.4rem;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .btn-create:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+  }
+
+  .experiences-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .experiences-table thead {
+    background: rgba(0, 255, 255, 0.1);
+    border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+  }
+
+  .experiences-table th {
+    padding: 1rem;
+    text-align: left;
+    color: #00ffff;
+    font-weight: 700;
+  }
+
+  .experiences-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease;
+  }
+
+  .experiences-table tbody tr:hover {
+    background-color: rgba(0, 255, 255, 0.05);
+  }
+
+  .experiences-table td {
+    padding: 1rem;
+  }
+
+  .col-image {
+    width: 120px;
+  }
+
+  .col-title {
+    flex: 1;
+  }
+
+  .col-actions {
+    width: auto;
+  }
+
+  .exp-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .exp-title h4 {
+    margin: 0 0 0.3rem 0;
+    color: #fff;
+    font-size: 1rem;
+  }
+
+  .exp-tech {
+    margin: 0;
+    color: #888;
+    font-size: 0.85rem;
+  }
+
+  /* Modal styles */
+  .modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+  }
+
+  .modal[hidden] {
+    display: none;
+  }
+
+  .modal-content {
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    padding: 0;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 255, 255, 0.05);
+  }
+
+  .modal-header h3 {
+    margin: 0;
+    color: #00ffff;
+    font-size: 1.3rem;
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+  }
+
+  .btn-close:hover {
+    color: #00ffff;
+  }
+
+  .modal-content .experience-form {
+    padding: 1.5rem;
+  }
+</style>

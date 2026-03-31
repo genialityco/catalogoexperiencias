@@ -1,5 +1,6 @@
 ---
 // Termometro de Tension page
+import Navigation from '../../components/Navigation.astro';
 ---
 
 <!doctype html>
@@ -13,29 +14,19 @@
 		<title>Geniality - Termómetro de Tensión</title>
 	</head>
 	<body class="bg-black text-white font-sans">
-		<nav class="navbar">
-			<div class="nav-container">
-				<div class="logo">
-					<a href="/"><h1>Geniality</h1></a>
-				</div>
-				<ul class="nav-menu">
-					<li><a href="/reto">El Reto 2026</a></li>
-					<li><a href="/#experiencias">Catálogo de Experiencias</a></li>
-					<li><a href="/#btl">Para Agencias BTL</a></li>
-					<li><a href="/#inversion">Modelos de Inversión</a></li>
-				</ul>
-				<div class="cta-button">
-					<a href="/#contacto" class="btn-demo">Cotizar mi Venue</a>
-				</div>
-			</div>
-		</nav>
+		<Navigation />
 	<section class="experience-detail">
+		<div class="hero-video">
+			<video autoplay muted loop>
+				<source src="/videos/termometro-full.mp4" type="video/mp4">
+				<!-- Fallback image -->
+				<img src="/images/termometro-hero.jpg" alt="Termómetro de Tensión en acción">
+			</video>
+		</div>
+
 		<div class="content-container">
 			<div class="left-content">
 				<h1>Termómetro de Tensión</h1>
-				<figure class="experience-image">
-					<img src="/assets/experiences/experiencia-ejemplo3.png" alt="Imagen destacada de Termómetro de Tensión" loading="eager" />
-				</figure>
 				<h2>El Concepto</h2>
 				<p>Durante el medio tiempo, los usuarios entran por QR y deben tocar la pantalla de su celular lo más rápido posible. La sumatoria de todos llena un tanque de presión en la pantalla principal; si estalla, se desbloquea una promoción general para todo el bar.</p>
 				<h2>El Logro Comercial</h2>
@@ -65,7 +56,20 @@
 <style>
 	.experience-detail {
 		min-height: 100vh;
-		margin-top: 20px;
+	}
+
+	.hero-video {
+		width: 100%;
+		height: 60vh;
+		overflow: hidden;
+		position: relative;
+	}
+
+	.hero-video video,
+	.hero-video img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
 
 	.content-container {
@@ -87,21 +91,6 @@
 		font-size: 1.8rem;
 		color: #fff;
 		margin: 2rem 0 1rem 0;
-	}
-
-	.experience-image {
-		margin: 0 0 2rem;
-		border-radius: 18px;
-		overflow: hidden;
-		border: 1px solid rgba(255, 255, 255, 0.14);
-		box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
-	}
-
-	.experience-image img {
-		width: 100%;
-		height: clamp(240px, 40vw, 380px);
-		object-fit: cover;
-		display: block;
 	}
 
 	.left-content p {
@@ -162,80 +151,12 @@
 			grid-template-columns: 1fr;
 			gap: 2rem;
 		}
+		.hero-video {
+			height: 40vh;
+		}
 		.left-content h1 {
 			font-size: 2rem;
 		}
 	}
 
-	/* Navbar styles */
-	.navbar {
-		position: fixed;
-		top: 0;
-		width: 100%;
-		background: rgba(0, 0, 0, 0.9);
-		backdrop-filter: blur(10px);
-		z-index: 1000;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-	}
-
-	.nav-container {
-		max-width: 1200px;
-		margin: 0 auto;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 1rem 2rem;
-	}
-
-	.logo h1 {
-		color: #00ffff;
-		font-size: 1.5rem;
-		font-weight: 700;
-		margin: 0;
-		text-shadow: 0 0 10px #00ffff;
-	}
-
-	.nav-menu {
-		display: flex;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		gap: 2rem;
-	}
-
-	.nav-menu a {
-		color: #fff;
-		text-decoration: none;
-		font-weight: 400;
-		transition: color 0.3s;
-	}
-
-	.nav-menu a:hover {
-		color: #00ffff;
-	}
-
-	.btn-demo {
-		background: linear-gradient(45deg, #00ffff, #ff00ff);
-		color: #000;
-		padding: 0.5rem 1rem;
-		border-radius: 25px;
-		text-decoration: none;
-		font-weight: 600;
-		transition: transform 0.3s;
-	}
-
-	.btn-demo:hover {
-		transform: scale(1.05);
-	}
-
-	@media (max-width: 768px) {
-		.nav-container {
-			flex-direction: column;
-			padding: 1rem;
-		}
-		.nav-menu {
-			margin: 1rem 0;
-			gap: 1rem;
-		}
-	}
 </style>

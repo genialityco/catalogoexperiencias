@@ -6,11 +6,11 @@ export default function SmoothScroll() {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: 'vertical',
-      gestureDirection: 'vertical',
+      direction: 'both', // Permitir desplazamiento vertical y horizontal
+      gestureDirection: 'both', // Gestos en ambas direcciones
       smooth: true,
       mouseMultiplier: 1,
-      smoothTouch: false,
+      smoothTouch: true, // Activar desplazamiento suave en dispositivos táctiles
       touchMultiplier: 2,
       infinite: false,
     });

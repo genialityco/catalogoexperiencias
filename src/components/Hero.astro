@@ -3,7 +3,7 @@
 import EnergyAura from './EnergyAura.jsx';
 ---
 
-<section class="hero relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+<section class="hero relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden pt-20">
 	<!-- Animated Background -->
 	<div class="absolute inset-0 overflow-hidden">
 		<div class="absolute -top-40 -right-40 w-80 h-80 bg-brand-purple/20 rounded-full blur-3xl animate-pulse-slow"></div>
@@ -48,44 +48,39 @@ import EnergyAura from './EnergyAura.jsx';
 
 		<!-- CTA Buttons -->
 		<div class="flex flex-col sm:flex-row gap-4 mb-16">
-			<a href="#experiencias" class="group inline-flex items-center gap-3 px-8 py-4 bg-brand-cyan text-brand-dark rounded-xl font-bold transition-all duration-300 hover:shadow-glow-sm hover:scale-105">
-				<span>Explorar Experiencias</span>
-				<svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-				</svg>
-			</a>
-			<a href="#btl" class="inline-flex items-center gap-2 px-8 py-4 border-2 border-brand-cyan/50 text-text-primary rounded-xl font-semibold transition-all duration-300 hover:border-brand-cyan hover:bg-brand-cyan/10 hover:shadow-glow-sm">
-				Para Agencias & Productoras
-			</a>
-		</div>
-
-		<!-- Scroll Indicator -->
-		<div class="flex items-center gap-2 text-text-tertiary text-sm font-medium">
-			<span>DESCUBRE MÁS</span>
-			<svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-			</svg>
+			<a href="#experiencias" class="btn-primary">Explorar Experiencias</a>
+			<a href="#contacto" class="btn-secondary">Contáctanos</a>
 		</div>
 	</div>
 </section>
 
 <style>
-	.hero-content {
-		animation: slideUp 0.8s ease-out forwards;
-	}
-
-	@keyframes slideUp {
-		from {
-			opacity: 0;
-			transform: translateY(40px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-
-	:global(html) {
-		scroll-behavior: smooth;
-	}
+.hero {
+	background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+}
+.btn-primary {
+	background: linear-gradient(to right, #06b6d4, #9333ea);
+	color: white;
+	padding: 0.75rem 1.5rem;
+	border-radius: 9999px;
+	font-weight: bold;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-primary:hover {
+	transform: scale(1.05);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.btn-secondary {
+	background: transparent;
+	border: 2px solid #06b6d4;
+	color: #06b6d4;
+	padding: 0.75rem 1.5rem;
+	border-radius: 9999px;
+	font-weight: bold;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-secondary:hover {
+	transform: scale(1.05);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 </style>

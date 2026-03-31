@@ -5,8 +5,8 @@ import Investment from '../components/Investment.astro';
 
 <Layout>
 	<main class="page-content">
-		<section class="hero-section">
-			<div class="container">
+		<section class="hero-section text-center">
+			<div class="container flex flex-col items-center text-center">
 				<h1>Planes de Inversión</h1>
 				<p>Implementaciones modulares que se ajustan al tamaño de tu evento. Todos nuestros planes incluyen hardware, instalación y soporte remoto.</p>
 			</div>
@@ -14,9 +14,9 @@ import Investment from '../components/Investment.astro';
 		<Investment />
 
 		<section class="additional-info">
-			<div class="container">
+			<div class="container flex flex-col items-center text-center">
 				<h2>¿Por qué invertir en Geniality?</h2>
-				<div class="reasons">
+				<div class="reasons flex flex-col md:flex-row justify-center items-center text-center gap-8">
 					<div class="reason">
 						<h3>🚀 ROI Garantizado</h3>
 						<p>Recupera tu inversión en el primer evento con el aumento en ventas.</p>
@@ -35,7 +35,7 @@ import Investment from '../components/Investment.astro';
 					</div>
 				</div>
 
-				<div class="cta-section">
+				<div class="cta-section text-center">
 					<h2>¿Listo para transformar tu venue?</h2>
 					<p>Contacta con nuestro equipo para una consultoría gratuita y personalizada.</p>
 					<a href="/hablemos" class="btn-cta">Hablemos</a>
