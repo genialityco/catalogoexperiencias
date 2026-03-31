@@ -5,6 +5,9 @@ SECRETS_SCAN_SMART_DETECTION_ENABLED=false
   command = "npm run build"
   functions = "dist/functions"
   publish = "dist"
+  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES=true
+  SECRETS_SCAN_SMART_DETECTION_ENABLED=false
+  SECRETS_SCAN_ENABLED = "false"
 
 [functions]
   node_bundler = "esbuild"
