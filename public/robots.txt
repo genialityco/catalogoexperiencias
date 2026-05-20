@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://geniality.com.co/sitemap.xml
+Sitemap: https://genexperiencias.netlify.app/sitemap.xml

@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { getExperiences } from "../lib/firebase/database";
 
-const SITE = "https://geniality.com.co"; // ← igual que astro.config.mjs
+const SITE = "https://genexperiencias.netlify.app";
 
 function toISODate(val: unknown, fallback: string): string {
   try {

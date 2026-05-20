@@ -6,7 +6,7 @@ import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://geniality.com.co', // ← actualiza con tu dominio real
+  site: 'https://genexperiencias.netlify.app',
   adapter: netlify(),
   integrations: [react(), tailwind()]
 });
