@@ -4,12 +4,15 @@ import Experiences from '../components/Experiences.astro';
 import ImplementationModes from '../components/ImplementationModes.astro';
 ---
 
-<Layout>
+<Layout
+  title="Catálogo de Experiencias Interactivas para Eventos | Geniality"
+  description="Explora nuestro catálogo: tótems táctiles, realidad aumentada, photo booths, gamificación y captura de leads. Experiencias interactivas llave en mano para eventos deportivos y corporativos."
+>
 	<main class="page-content">
 		<section class="hero-section text-center">
 			<div class="container flex flex-col items-center text-center">
 				<h1>Nuestras Experiencias</h1>
-				<p>Descubre las experiencias interactivas que revolucionarán tu venue durante el Mundial 2026.</p>
+				<p>Descubre las experiencias interactivas que revolucionarán tu venue o evento.</p>
 			</div>
 		</section>
 		<Experiences />
@@ -23,10 +26,11 @@ import ImplementationModes from '../components/ImplementationModes.astro';
 	}
 
 	.hero-section {
-		background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+		background: #f8fafc;
 		padding: 5rem 0;
 		text-align: center;
-		color: #fff;
+		color: #0f172a;
+		border-bottom: 1px solid #e2e8f0;
 	}
 
 	.container {
@@ -42,6 +46,6 @@ import ImplementationModes from '../components/ImplementationModes.astro';
 
 	.hero-section p {
 		font-size: 1.2rem;
-		color: #ccc;
+		color: #475569;
 	}
 </style>

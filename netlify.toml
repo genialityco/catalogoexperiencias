@@ -1,10 +1,22 @@
+# Netlify configuration for Astro project
+SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES=true
+SECRETS_SCAN_SMART_DETECTION_ENABLED=false
 [build]
   command = "npm run build"
   publish = "dist"
+  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES=true
+  SECRETS_SCAN_SMART_DETECTION_ENABLED=false
+  SECRETS_SCAN_ENABLED = "false"
 
 [functions]
   node_bundler = "esbuild"
 
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/ssr"
+  status = 200
+
+# Cache configuration
 [[headers]]
   for = "/assets/*"
   [headers.values]

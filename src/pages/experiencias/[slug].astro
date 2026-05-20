@@ -1,224 +1,979 @@
 ---
-import { getExperiences } from "../../lib/firebase/database";
+export const prerender = false;
+
+import { getExperienceBySlug } from "../../lib/firebase/database";
 import Navigation from "../../components/Navigation.astro";
 import ImplementationModes from "../../components/ImplementationModes.astro";
 
+// ---------------------------------------------------------------------------
+// Per-field defaults — applied to any experience missing that field
+// ---------------------------------------------------------------------------
+const DEFAULTS = {
+  formatCategory: "Touch",
+  tagsInteraction: ["Touch Screen"],
+  tagsVibe: ["Casual"],
+  tagsCapture: ["Lead Capture"],
+  track: "Catalog",
+  origin: "Website",
+  subtitle: "Raspa y gana digital con premios instantáneos configurables",
+  description:
+    "Pantalla táctil vertical donde el usuario raspa con la mano para revelar premios instantáneos. Las probabilidades de ganar son configurables, lo que permite controlar el inventario de premios al milímetro durante el evento. Partidas de 15 segundos permiten atender a cientos de personas por hora sin generar cuellos de botella. Es la forma más rápida de capturar base de datos: la gente entrega sus datos felizmente a cambio de la oportunidad de jugar.",
+  keyFeatures: [
+    "Imán de Leads: forma rápida y no intrusiva de llenar base de datos.",
+    "Tráfico Fluido: partidas de 15 segundos, sin cuellos de botella.",
+    "Probabilidades configurables para controlar inventario de premios.",
+    "Visuales 100% personalizables (monedas, confetti, logos).",
+  ],
+  addons: "Captura de leads con QR; integración CRM; gestión de stock digital",
+  dimensions: "Tótem vertical · 1.5 × 1 m de footprint",
+  power: "1 × 110 V / 15 A",
+  setupTime: "1–2 horas",
+  logisticsConstraints: "Indoor",
+  internet: "WiFi recomendado",
+  equipmentIncluded:
+    "Tótem con pantalla táctil vertical, software licenciado, branding del juego, soporte técnico en sitio.",
+  modality: "Llave en Mano",
+  capacity: "~240",
+  sessionLength: "15 s",
+};
+
+// ---------------------------------------------------------------------------
+// Normalise — maps both new-schema and legacy-schema fields,
+// filling any missing field with the corresponding DEFAULTS value
+// ---------------------------------------------------------------------------
+function normalizeExperience(raw: any) {
+  const legacyFeatures = [
+    raw.keyFeature1,
+    raw.keyFeature2,
+    raw.keyFeature3,
+    raw.keyFeature4,
+    raw.objetivo,
+  ].filter(Boolean);
+
+  const tagsInteraction = raw.tagsInteraction?.length
+    ? raw.tagsInteraction
+    : DEFAULTS.tagsInteraction;
+  const tagsVibe = raw.tagsVibe?.length ? raw.tagsVibe : DEFAULTS.tagsVibe;
+  const tagsCapture = raw.tagsCapture?.length
+    ? raw.tagsCapture
+    : DEFAULTS.tagsCapture;
+
+  return {
+    name: raw.name || raw.experiencia || "",
+    slug: raw.slug || raw.uid || "",
+    formatCategory:
+      raw.formatCategory || raw.tecnologia || DEFAULTS.formatCategory,
+    tagsInteraction,
+    tagsVibe,
+    tagsCapture,
+    allTags: [...tagsInteraction, ...tagsVibe, ...tagsCapture],
+    track: raw.track || DEFAULTS.track,
+    origin: raw.origin || DEFAULTS.origin,
+    subtitle: raw.subtitle || raw.pitchComercial || DEFAULTS.subtitle,
+    description:
+      raw.description || raw.descripcionDetallada || DEFAULTS.description,
+    keyFeatures: raw.keyFeatures?.length
+      ? raw.keyFeatures
+      : legacyFeatures.length
+        ? legacyFeatures
+        : DEFAULTS.keyFeatures,
+    addons: raw.addons || DEFAULTS.addons,
+    dimensions: raw.dimensions || DEFAULTS.dimensions,
+    power: raw.power || DEFAULTS.power,
+    setupTime: raw.setupTime || DEFAULTS.setupTime,
+    logisticsConstraints:
+      raw.logisticsConstraints || DEFAULTS.logisticsConstraints,
+    internet: raw.internet || DEFAULTS.internet,
+    equipmentIncluded: raw.equipmentIncluded || DEFAULTS.equipmentIncluded,
+    modality: raw.modality || DEFAULTS.modality,
+    capacity: raw.capacity || DEFAULTS.capacity,
+    sessionLength: raw.sessionLength || DEFAULTS.sessionLength,
+    photosNeeded: raw.photosNeeded ?? false,
+    videoUrl: raw.videoUrl || "",
+    image: raw.image || null,
+    secondImage: raw.secondImage || null,
+    visible: raw.visible ?? true,
+  };
+}
+
 const { slug } = Astro.params;
+const rawExperience = await getExperienceBySlug(slug!);
+if (!rawExperience) return Astro.redirect('/experiencias');
+const exp = normalizeExperience(rawExperience);
 
-// Traer todas las experiencias y buscar la que coincida con el slug
-const experiences = await getExperiences();
-const experience =
-  experiences.find((exp: any) => String(exp.uid) === String(slug)) ?? null;
-
-// Generar URL de imagen con fallback seguro
 const fallbackImage = "/assets/experiences/experiencia-ejemplo1.jpg";
-const posterImage = experience?.image || fallbackImage;
-const secondImage = experience?.secondImage || null;
+const posterImage = exp.image || fallbackImage;
+
+const addonsList = exp.addons
+  ? exp.addons
+      .split(";")
+      .map((s: string) => s.trim())
+      .filter(Boolean)
+  : [];
+
+const categoryPill =
+  exp.allTags.length > 0 ? exp.allTags.join(" · ") : exp.formatCategory;
+
+const hasLogistics =
+  exp.dimensions ||
+  exp.power ||
+  exp.setupTime ||
+  exp.logisticsConstraints ||
+  exp.internet;
+const hasOperation = exp.capacity || exp.sessionLength || exp.modality;
+
+const FALLBACK = "/assets/experiences/experiencia-ejemplo1.jpg";
+
+// SEO
+const seoTitle = `${exp.name} | Geniality`;
+const seoDescription = (exp.description || exp.subtitle || "")
+  .replace(/<[^>]*>/g, "")
+  .trim()
+  .slice(0, 160);
+const seoImage = exp.image
+  ? exp.image
+  : `${Astro.url.origin}/assets/experiences/experiencia-ejemplo1.jpg`;
+const canonicalUrl = Astro.url.href;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: exp.name,
+  description: exp.description || exp.subtitle,
+  image: seoImage,
+  url: canonicalUrl,
+  provider: {
+    "@type": "Organization",
+    name: "Geniality",
+    url: Astro.url.origin,
+  },
+  category: exp.formatCategory,
+  ...(exp.capacity ? { audience: { "@type": "Audience", audienceType: `Hasta ${exp.capacity} personas` } } : {}),
+};
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
-    <title>
-      {
-        experience
-          ? `Geniality - ${experience.experiencia}`
-          : "Experiencia no encontrada"
-      }
-    </title>
-  </head>
 
-  <body class="bg-black text-white font-sans">
+    <title>{seoTitle}</title>
+    <meta name="description" content={seoDescription} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Geniality" />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:title" content={seoTitle} />
+    <meta property="og:description" content={seoDescription} />
+    <meta property="og:image" content={seoImage} />
+    <meta property="og:url" content={canonicalUrl} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={seoTitle} />
+    <meta name="twitter:description" content={seoDescription} />
+    <meta name="twitter:image" content={seoImage} />
+
+    <!-- JSON-LD Structured Data -->
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <Navigation />
 
-    {
-      !experience ? (
-        <main style="background: #111; color: #fff; font-family: sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center;">
-          <h1 style="color: #00ffff; margin-bottom: 1rem;">
-            Experiencia no encontrada
-          </h1>
-          <p style="margin-bottom: 1rem;">
-            La experiencia solicitada no existe o ha sido eliminada.
-          </p>
-          <a
-            href="/experiencias"
-            style="color: #00ffff; text-decoration: underline;"
-          >
-            Volver al catálogo
-          </a>
-        </main>
-      ) : (
-        <>
-          <section class="experience-detail pt-10" style="margin: 10px;">
-            <div class="content-container">
-              <div class="left-content">
-                <h1>{experience.experiencia}</h1>
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/">Inicio</a>
+      <span class="sep">/</span>
+      <a href="/experiencias">Catálogo</a>
+      <span class="sep">/</span>
+      {
+        exp.formatCategory && (
+          <>
+            <a
+              href={`/experiencias?format=${exp.formatCategory.toLowerCase()}`}
+            >
+              {exp.formatCategory}
+            </a>
+            <span class="sep">/</span>
+          </>
+        )
+      }
+      <span class="current">{exp.name}</span>
+    </nav>
 
-                <div class="experience-image">
-                  <img src={posterImage} alt={experience.experiencia} />
-                </div>
+    <main class="experience-detail">
+      <!-- Header -->
+      <header class="header-block">
+        {categoryPill && <span class="category-pill">{categoryPill}</span>}
+        <h1>{exp.name}</h1>
+        {exp.subtitle && <p class="subtitle">{exp.subtitle}</p>}
+      </header>
 
-                <p>{experience.descripcionDetallada}</p>
-
-                {secondImage && (
-                  <div class="experience-image" style="margin-top: 1.5rem;">
-                    <img
-                      src={secondImage}
-                      alt={`Segunda imagen de ${experience.experiencia}`}
-                    />
-                  </div>
-                )}
-
-                <p>{experience.pitchComercial}</p>
-              </div>
-
-              <div class="right-content">
-                <div class="specs-card">
-                  <h3>Ficha Técnica</h3>
-
-                  <div class="spec-item">
-                    <strong>Tecnología:</strong>
-                    {experience.tecnologia}
-                  </div>
-
-                  <a href="/#contacto" class="btn-quote">
-                    Cotizar esta experiencia
+      <div class="content-container">
+        <!-- ── LEFT column ── -->
+        <div class="left-content">
+          <!-- Gallery -->
+          <div class="gallery">
+            <div class="hero">
+              <img
+                src={posterImage}
+                alt={exp.name}
+                onerror={`this.onerror=null;this.src='${FALLBACK}'`}
+              />
+              
+            </div>
+            {
+              exp.videoUrl && (
+                <div class="thumb video-thumb">
+                  <img
+                    src={posterImage}
+                    alt="Video del producto"
+                    onerror={`this.onerror=null;this.src='${FALLBACK}'`}
+                  />
+                  <a
+                    href={exp.videoUrl}
+                    target="_blank"
+                    rel="noopener"
+                    class="play-overlay"
+                    aria-label="Ver video"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                    <span class="play-label">Ver en acción</span>
                   </a>
                 </div>
-              </div>
-            </div>
-          </section>
+              )
+            }
+          </div>
 
-          <ImplementationModes />
-        </>
-      )
-    }
+          <!-- Description -->
+          {
+            exp.description && (
+              <section class="section">
+                <h2>Descripción</h2>
+                <p>{exp.description}</p>
+              </section>
+            )
+          }
+
+          <!-- Second image (after description) -->
+          {
+            exp.secondImage && (
+              <div class="second-image-block">
+                <img
+                  src={exp.secondImage}
+                  alt={`Segunda imagen de ${exp.name}`}
+                  onerror={`this.onerror=null;this.src='${FALLBACK}'`}
+                />
+              </div>
+            )
+          }
+
+          <!-- Key Features -->
+          {
+            exp.keyFeatures.length > 0 && (
+              <section class="section">
+                <h2>Características clave</h2>
+                <ul class="features">
+                  {exp.keyFeatures.map((f: string) => (
+                    <li
+                      set:html={f.replace(/^([^:]+):/, "<strong>$1:</strong>")}
+                    />
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+
+          <!-- Add-ons -->
+          {
+            addonsList.length > 0 && (
+              <section class="section">
+                <h2>Add-ons</h2>
+                <ul class="addons">
+                  {addonsList.map((addon: string) => (
+                    <li>
+                      <span
+                        set:html={addon.replace(
+                          /^([^.]+\.)/,
+                          "<strong>$1</strong>",
+                        )}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+        </div>
+
+        <!-- ── RIGHT column — specs card ── -->
+        <aside class="right-content">
+          <div class="specs-card">
+            <h3 class="specs-title">Ficha Técnica</h3>
+
+            <!-- Category / Tags -->
+            <div class="spec-group">
+              <div class="spec-group-title">Categoría</div>
+              {
+                exp.formatCategory && (
+                  <div class="spec-item">
+                    <span class="spec-label">Formato</span>
+                    <span class="spec-val">{exp.formatCategory}</span>
+                  </div>
+                )
+              }
+              {
+                exp.allTags.length > 0 && (
+                  <div class="spec-item spec-item--tags">
+                    <span class="spec-label">Tags</span>
+                    <div class="tags-row">
+                      {exp.allTags.map((tag: string) => (
+                        <span class="tag">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                )
+              }
+            </div>
+
+            <!-- Logistics -->
+            {
+              hasLogistics && (
+                <div class="spec-group">
+                  <div class="spec-group-title">Logística</div>
+                  {exp.dimensions && (
+                    <div class="spec-item">
+                      <span class="spec-label">Dimensiones</span>
+                      <span class="spec-val">{exp.dimensions}</span>
+                    </div>
+                  )}
+                  {exp.power && (
+                    <div class="spec-item">
+                      <span class="spec-label">Energía</span>
+                      <span class="spec-val">{exp.power}</span>
+                    </div>
+                  )}
+                  {exp.setupTime && (
+                    <div class="spec-item">
+                      <span class="spec-label">Montaje</span>
+                      <span class="spec-val">{exp.setupTime}</span>
+                    </div>
+                  )}
+                  {exp.internet && (
+                    <div class="spec-item">
+                      <span class="spec-label">Internet</span>
+                      <span class="spec-val">{exp.internet}</span>
+                    </div>
+                  )}
+                  {exp.logisticsConstraints && (
+                    <div class="spec-item">
+                      <span class="spec-label">Restricciones</span>
+                      <span class="spec-val">{exp.logisticsConstraints}</span>
+                    </div>
+                  )}
+                </div>
+              )
+            }
+
+            <!-- Operation -->
+            {
+              hasOperation && (
+                <div class="spec-group">
+                  <div class="spec-group-title">Operación</div>
+                  {exp.capacity && (
+                    <div class="spec-item">
+                      <span class="spec-label">Capacidad</span>
+                      <span class="spec-val">{exp.capacity} / hora</span>
+                    </div>
+                  )}
+                  {exp.sessionLength && (
+                    <div class="spec-item">
+                      <span class="spec-label">Sesión</span>
+                      <span class="spec-val">{exp.sessionLength}</span>
+                    </div>
+                  )}
+                  {exp.modality && (
+                    <div class="spec-item">
+                      <span class="spec-label">Modalidad</span>
+                      <span class="spec-val">{exp.modality}</span>
+                    </div>
+                  )}
+                </div>
+              )
+            }
+
+            <!-- Includes -->
+            {
+              exp.equipmentIncluded && (
+                <div class="spec-group">
+                  <div class="spec-group-title">Incluye</div>
+                  <p class="spec-includes">{exp.equipmentIncluded}</p>
+                </div>
+              )
+            }
+
+            <div class="card-actions">
+              <a href="/#contacto" class="btn-quote">Cotizar esta experiencia</a>
+              <a href="/experiencias" class="btn-secondary">Volver al catálogo</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <ImplementationModes />
   </body>
 </html>
 
 <style>
-  .experience-detail {
+  :root {
+    --bg: #ffffff;
+    --bg-elev: #f7f7f7;
+    --bg-card: #f2f2f2;
+    --border: #e0e0e0;
+    --border-hover: #b0b0b0;
+    --text: #111111;
+    --text-dim: #444444;
+    --text-muted: #888888;
+    --accent: #e05a0a;
+    --accent-soft: rgba(224, 90, 10, 0.1);
+    --grad-from: #22d3ee;
+    --grad-to: #e879f9;
+    --font-display: "Archivo", sans-serif;
+    --font-body: "Archivo", sans-serif;
+    --font-serif: "Instrument Serif", serif;
+    --font-mono: "JetBrains Mono", monospace;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
     min-height: 100vh;
   }
 
-  .hero-video {
-    width: 100%;
-    height: 60vh;
-    overflow: hidden;
-    position: relative;
+  /* ── Breadcrumb ── */
+  .breadcrumb {
+    max-width: 1280px;
+    margin: 10px auto 10px;
+    padding: 88px 32px 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  .breadcrumb a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .breadcrumb a:hover {
+    color: var(--accent);
+  }
+  .breadcrumb .sep {
+    margin: 0 6px;
+    opacity: 0.4;
+  }
+  .breadcrumb .current {
+    color: var(--text-dim);
   }
 
-  .hero-video video,
-  .hero-video img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .content-container {
-    max-width: 1200px;
+  /* ── Main container ── */
+  .experience-detail {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 4rem 2rem;
+    padding: 24px 32px 80px;
+  }
+
+  /* ── Header block ── */
+  .header-block {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .category-pill {
+    display: inline-block;
+    padding: 6px 12px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .subtitle {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    color: var(--text-dim);
+    line-height: 1.35;
+    max-width: 700px;
+  }
+
+  /* ── Two-column layout ── */
+  .content-container {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    align-items: start;
   }
 
-  .left-content h1 {
-    font-size: 3rem;
-    color: #00ffff;
-    margin-bottom: 2rem;
+  /* Left column */
+  .left-content {
+    padding-right: 56px;
+    border-right: 1px solid var(--border);
+  }
+  .left-content > * + * {
+    margin-top: 48px;
   }
 
-  .left-content h2 {
-    font-size: 1.8rem;
-    color: #fff;
-    margin: 2rem 0 1rem 0;
+  /* Right column */
+  .right-content {
+    padding-left: 32px;
+    position: sticky;
+    top: 100px;
   }
 
-  .left-content p {
-    color: #ccc;
-    line-height: 1.6;
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
+  /* ── Gallery ── */
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
-
-  .experience-image {
-    margin: 3rem 0;
+  .gallery .hero {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 9;
+  }
+  .gallery .thumb {
+    aspect-ratio: 4 / 3;
+  }
+  .gallery > * {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 10px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    transition: border-color 0.2s;
   }
-
-  .experience-image img {
+  .gallery > *:hover {
+    border-color: var(--border-hover);
+  }
+  .gallery img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: contain;
     display: block;
   }
-
-  .right-content {
-    position: sticky;
-    top: 2rem;
-    height: fit-content;
+  .video-thumb {
+    cursor: pointer;
   }
-
-  .specs-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 2rem;
-  }
-
-  .specs-card h3 {
-    color: #00ffff;
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .spec-item {
-    margin-bottom: 1rem;
-    color: #ccc;
-  }
-
-  .spec-item strong {
-    color: #fff;
-    display: block;
-    margin-bottom: 0.5rem;
-  }
-
-  .btn-quote {
-    display: inline-block;
-    background: linear-gradient(45deg, #00ffff, #ff00ff);
-    color: #000;
-    padding: 1rem 2rem;
-    border-radius: 50px;
+  .play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    transition: background 0.2s;
     text-decoration: none;
+  }
+  .video-thumb:hover .play-overlay {
+    background: rgba(0, 0, 0, 0.55);
+  }
+  .play-overlay svg {
+    width: 56px;
+    height: 56px;
+    fill: #ffffff;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+  }
+  .play-label {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #fff;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  /* ── Section blocks ── */
+  .section h2 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section p {
+    color: var(--text-dim);
+    font-size: 16px;
+    max-width: 680px;
+    line-height: 1.7;
+  }
+
+  /* Key features */
+  .features {
+    list-style: none;
+    display: grid;
+    gap: 18px;
+  }
+  .features li {
+    padding-left: 24px;
+    position: relative;
+    color: var(--text-dim);
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+  .features li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 12px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .features :global(strong) {
+    color: var(--text);
     font-weight: 600;
-    margin-top: 2rem;
-    transition: transform 0.3s;
   }
 
+  /* Add-ons */
+  .addons {
+    list-style: none;
+    display: grid;
+    gap: 14px;
+  }
+  .addons li {
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14.5px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: border-color 0.2s;
+  }
+  .addons li:hover {
+    border-color: var(--border-hover);
+  }
+  .addons li::before {
+    content: "+";
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .addons :global(strong) {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* ── Specs card ── */
+  .specs-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow:
+      0 4px 6px rgba(0, 0, 0, 0.04),
+      0 12px 40px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+  }
+
+  /* Gradient header strip */
+  .specs-card::before {
+    content: "";
+    display: block;
+    height: 5px;
+    background: linear-gradient(90deg, var(--grad-from), var(--grad-to));
+  }
+
+  /* Inner padding wrapper — everything except the ::before strip */
+  .specs-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 24px 24px 0;
+    margin-bottom: 0;
+  }
+
+  /* Spec groups */
+  .spec-group {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .spec-group:last-of-type {
+    border-bottom: none;
+  }
+
+  .spec-group-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .spec-group-title::before {
+    content: "";
+    display: inline-block;
+    width: 3px;
+    height: 12px;
+    background: linear-gradient(180deg, var(--grad-from), var(--grad-to));
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Spec row: label left, value right */
+  .spec-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .spec-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .spec-label {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .spec-val {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 13px;
+    text-align: right;
+    word-break: break-word;
+    max-width: 175px;
+  }
+
+  /* Tags row — when used inside spec-item */
+  .spec-item--tags {
+    align-items: flex-start;
+  }
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: flex-end;
+    max-width: 190px;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--text-dim);
+    background: #f5f5f5;
+    padding: 3px 9px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  /* Equipment included paragraph */
+  .spec-includes {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+
+  /* ── CTA buttons wrapper ── */
+  .card-actions {
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* ── CTA buttons ── */
+  .btn-quote {
+    display: block;
+    width: 100%;
+    padding: 15px 20px;
+    background: linear-gradient(90deg, var(--grad-from), var(--grad-to));
+    color: #000;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    transition:
+      transform 0.15s,
+      box-shadow 0.15s;
+    font-family: var(--font-display);
+  }
   .btn-quote:hover {
-    transform: scale(1.05);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(232, 121, 249, 0.25);
+  }
+  .btn-secondary {
+    display: block;
+    width: 100%;
+    padding: 13px 20px;
+    background: transparent;
+    color: var(--text-dim);
+    text-align: center;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    transition:
+      border-color 0.15s,
+      color 0.15s;
+    font-family: var(--font-body);
+  }
+  .btn-secondary:hover {
+    border-color: var(--border-hover);
+    color: var(--text);
   }
 
-  @media (max-width: 768px) {
+  /* ── Second image block ── */
+  .second-image-block {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    aspect-ratio: 16 / 9;
+    transition: border-color 0.2s;
+  }
+  .second-image-block:hover {
+    border-color: var(--border-hover);
+  }
+  .second-image-block img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 960px) {
     .content-container {
       grid-template-columns: 1fr;
-      gap: 2rem;
     }
-
-    .hero-video {
-      height: 40vh;
+    .left-content {
+      padding-right: 0;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 40px;
     }
+    .right-content {
+      padding-left: 0;
+      padding-top: 32px;
+      position: static;
+    }
+    .tags-row {
+      max-width: 100%;
+      justify-content: flex-start;
+    }
+    .spec-val {
+      max-width: 60%;
+    }
+  }
 
-    .left-content h1 {
-      font-size: 2rem;
+  @media (max-width: 560px) {
+    .experience-detail {
+      padding: 16px 20px 60px;
+    }
+    .breadcrumb {
+      padding: 80px 20px 0;
+      font-size: 11px;
+      margin: 10px auto 10px;
+    }
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+    .gallery .thumb {
+      aspect-ratio: 16 / 10;
+    }
+    .spec-val {
+      max-width: 55%;
+    }
+    .spec-group {
+      padding: 16px 20px;
+    }
+    .specs-title {
+      padding: 20px 20px 0;
+    }
+    .card-actions {
+      padding: 16px 20px 20px;
     }
   }
 </style>

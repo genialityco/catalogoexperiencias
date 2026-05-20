@@ -4,14 +4,17 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   getFirestore,
+  limit,
   orderBy,
   query,
   serverTimestamp,
   setDoc,
   Timestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 import { firebaseApp } from "./client";
 
@@ -52,16 +55,52 @@ export interface ClientLead extends LeadPayload {
 }
 
 export interface ExperiencePayload {
-  uid: string;
-  experiencia: string;
-  descripcionDetallada: string;
-  pitchComercial: string;
-  tecnologia: string;
-  objetivo: string;
-  costo: string;
-  visible: boolean;
+  // Identity
+  uid: string;              // Firestore doc ID / slug
+  name: string;             // Display name
+  slug?: string;            // URL slug (defaults to uid)
+
+  // Classification
+  formatCategory: string;
+  tagsInteraction?: string[];
+  tagsVibe?: string[];
+  tagsCapture?: string[];
+  track?: string;
+  origin?: string;
+
+  // Content
+  subtitle?: string;        // ≤80 chars
+  description?: string;     // ≈90 words
+  keyFeatures?: string[];   // up to 4 items
+  addons?: string;          // semicolon-separated list
+
+  // Logistics
+  dimensions?: string;
+  power?: string;
+  setupTime?: string;
+  logisticsConstraints?: string;
+  internet?: string;
+  equipmentIncluded?: string;
+  modality?: string;
+  capacity?: string;
+  sessionLength?: string;
+
+  // Media
   image?: string;
-  secondImage?: string; // Nueva propiedad para la segunda imagen
+  secondImage?: string;
+  photosNeeded?: boolean;
+  videoUrl?: string;
+
+  visible: boolean;
+  sortOrder?: number;
+
+  // Legacy fields — kept for backwards compat during migration
+  experiencia?: string;
+  descripcionDetallada?: string;
+  pitchComercial?: string;
+  tecnologia?: string;
+  objetivo?: string;
+  costo?: string;
 }
 
 export interface ExperienceItem extends ExperiencePayload {
@@ -155,6 +194,39 @@ export const deleteExperience = async (uid: string) => {
   }
 
   return uid;
+};
+
+export const updateSortOrders = async (updates: { uid: string; sortOrder: number }[]) => {
+  try {
+    await Promise.all(
+      updates.map(({ uid, sortOrder }) =>
+        updateDoc(doc(db, 'experiences', uid), { sortOrder })
+      )
+    );
+  } catch (error) {
+    handleExperiencePermissionError(error);
+  }
+};
+
+export const getExperienceBySlug = async (slug: string): Promise<ExperienceItem | null> => {
+  // Try direct doc lookup first (uid === doc ID)
+  try {
+    const directSnap = await getDoc(doc(db, 'experiences', slug));
+    if (directSnap.exists()) {
+      const data = directSnap.data() as ExperienceItem & { createdAt?: Timestamp | number };
+      return { ...data, uid: data.uid || directSnap.id, createdAt: toMillis(data.createdAt) };
+    }
+  } catch {
+    // fall through to field query
+  }
+
+  // Fall back to querying by slug field
+  const q = query(collection(db, 'experiences'), where('slug', '==', slug), limit(1));
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) return null;
+  const experienceDoc = snapshot.docs[0];
+  const data = experienceDoc.data() as ExperienceItem & { createdAt?: Timestamp | number };
+  return { ...data, uid: data.uid || experienceDoc.id, createdAt: toMillis(data.createdAt) };
 };
 
 export const getExperiences = async (): Promise<ExperienceItem[]> => {

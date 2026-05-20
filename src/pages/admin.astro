@@ -32,6 +32,7 @@ import Layout from '../layouts/Layout.astro';
           <table id="experiences-table" class="experiences-table">
             <thead>
               <tr>
+                <th class="col-handle"></th>
                 <th class="col-image">Imagen</th>
                 <th class="col-title">Experiencia</th>
                 <th class="col-actions">Acciones</th>
@@ -39,6 +40,7 @@ import Layout from '../layouts/Layout.astro';
             </thead>
             <tbody id="experiences-list"></tbody>
           </table>
+          <p id="experiences-count" class="experiences-count"></p>
         </article>
 
         <!-- Modal para crear/editar experiencia -->
@@ -50,47 +52,139 @@ import Layout from '../layouts/Layout.astro';
             </div>
 
             <form id="experience-form" class="experience-form">
-              <p class="hint">El UID se genera automáticamente al guardar. Solo se publica en catálogo si <code>visible = true</code>.</p>
+              <p class="hint">El UID/slug se genera automáticamente al guardar. Solo se publica en catálogo si <code>visible = true</code>.</p>
 
+              <!-- ── Identidad ── -->
+              <p class="form-section-title">Identidad</p>
               <div class="field-grid">
                 <label>
-                  Experiencia *
-                  <input type="text" name="experiencia" required />
+                  Nombre *
+                  <input type="text" name="name" required placeholder="Ej: Raspa y Gana" />
                 </label>
                 <label>
-                  Tecnología *
-                  <input type="text" name="tecnologia" required />
+                  Categoría / Formato *
+                  <input type="text" name="formatCategory" required placeholder="Ej: Touch, AR, VR" />
                 </label>
                 <label>
-                  Objetivo *
-                  <input type="text" name="objetivo" required />
+                  Track
+                  <input type="text" name="track" placeholder="Ej: Catalog" />
                 </label>
                 <label>
-                  Costo *
-                  <input type="text" name="costo" required />
+                  Origen
+                  <input type="text" name="origin" placeholder="Ej: Website" />
                 </label>
               </div>
 
+              <!-- ── Tags ── -->
+              <p class="form-section-title">Tags <span class="hint-inline">(separados por coma)</span></p>
+              <div class="field-grid">
+                <label>
+                  Tags Interacción
+                  <input type="text" name="tagsInteraction" placeholder="Touch Screen, Gesture" />
+                </label>
+                <label>
+                  Tags Vibe
+                  <input type="text" name="tagsVibe" placeholder="Casual, Competitivo" />
+                </label>
+                <label class="field-full">
+                  Tags Captura
+                  <input type="text" name="tagsCapture" placeholder="Lead Capture, Photo Op" />
+                </label>
+              </div>
+
+              <!-- ── Contenido ── -->
+              <p class="form-section-title">Contenido</p>
               <label>
-                Descripción Detallada *
-                <textarea name="descripcionDetallada" rows="4" required></textarea>
+                Subtítulo <span class="hint-inline">(≤ 80 caracteres)</span>
+                <input type="text" name="subtitle" maxlength="80" placeholder="Frase corta que resume la experiencia" />
+              </label>
+              <label>
+                Descripción <span class="hint-inline">(≈ 90 palabras)</span>
+                <textarea name="description" rows="4" placeholder="Descripción detallada de la experiencia..."></textarea>
+              </label>
+              <label>
+                Características clave <span class="hint-inline">(una por línea, máx. 4)</span>
+                <textarea name="keyFeatures" rows="4" placeholder="Imán de Leads: descripción...&#10;Tráfico Fluido: descripción...&#10;Característica 3...&#10;Característica 4..."></textarea>
+              </label>
+              <label>
+                Add-ons <span class="hint-inline">(separados por punto y coma)</span>
+                <textarea name="addons" rows="2" placeholder="Captura de leads con QR; integración CRM; gestión de stock digital"></textarea>
               </label>
 
+              <!-- ── Logística ── -->
+              <p class="form-section-title">Logística</p>
+              <div class="field-grid">
+                <label>
+                  Dimensiones
+                  <input type="text" name="dimensions" placeholder="Tótem vertical · 1.5 × 1 m" />
+                </label>
+                <label>
+                  Energía
+                  <input type="text" name="power" placeholder="1 × 110 V / 15 A" />
+                </label>
+                <label>
+                  Tiempo de montaje
+                  <input type="text" name="setupTime" placeholder="1–2 horas" />
+                </label>
+                <label>
+                  Restricciones
+                  <input type="text" name="logisticsConstraints" placeholder="Indoor" />
+                </label>
+                <label>
+                  Internet
+                  <input type="text" name="internet" placeholder="WiFi recomendado" />
+                </label>
+                <label>
+                  Modalidad
+                  <input type="text" name="modality" placeholder="Llave en Mano" />
+                </label>
+                <label>
+                  Capacidad (usuarios/hora)
+                  <input type="text" name="capacity" placeholder="~240" />
+                </label>
+                <label>
+                  Duración por sesión
+                  <input type="text" name="sessionLength" placeholder="15 s" />
+                </label>
+              </div>
               <label>
-                Pitch Comercial *
-                <textarea name="pitchComercial" rows="3" required></textarea>
+                Equipo incluido
+                <textarea name="equipmentIncluded" rows="2" placeholder="Tótem con pantalla táctil, software licenciado..."></textarea>
               </label>
 
-              <label>
-                Imagen (opcional)
-                <input type="file" name="image" accept="image/*" />
+              <!-- ── Media ── -->
+              <p class="form-section-title">Media</p>
+              <div class="field-grid">
+                <label>
+                  Imagen principal
+                  <div class="image-input-row">
+                    <input type="text" name="imageUrl" id="imageUrl" class="image-url-input" placeholder="https://firebasestorage..." />
+                    <button type="button" class="btn-upload" id="imageUploadBtn">Subir archivo</button>
+                  </div>
+                  <input type="file" id="imageFileInput" accept="image/*" class="hidden-file-input" />
+                  <span class="upload-hint" id="imageUploadStatus"></span>
+                </label>
+                <label>
+                  Segunda imagen
+                  <div class="image-input-row">
+                    <input type="text" name="secondImageUrl" id="secondImageUrl" class="image-url-input" placeholder="https://firebasestorage..." />
+                    <button type="button" class="btn-upload" id="secondImageUploadBtn">Subir archivo</button>
+                  </div>
+                  <input type="file" id="secondImageFileInput" accept="image/*" class="hidden-file-input" />
+                  <span class="upload-hint" id="secondImageUploadStatus"></span>
+                </label>
+                <label class="field-full">
+                  URL de video
+                  <input type="url" name="videoUrl" placeholder="https://..." />
+                </label>
+              </div>
+              <label class="check-row">
+                <input type="checkbox" name="photosNeeded" />
+                Requiere fotos reales del evento
               </label>
 
-              <label>
-                Segunda Imagen (opcional)
-                <input type="file" name="secondImage" accept="image/*" />
-              </label>
-
+              <!-- ── Configuración ── -->
+              <p class="form-section-title">Configuración</p>
               <label class="check-row">
                 <input type="checkbox" name="visible" checked />
                 Visible en catálogo
@@ -117,6 +211,7 @@ import Layout from '../layouts/Layout.astro';
     getLeads,
     toggleExperienceVisibility,
     updateExperience,
+    updateSortOrders,
   } from '../lib/firebase/database';
   import { uploadExperienceImage } from '../lib/firebase/storage';
 
@@ -136,16 +231,36 @@ import Layout from '../layouts/Layout.astro';
 
   interface AdminExperience {
     uid: string;
-    experiencia: string;
-    descripcionDetallada: string;
-    pitchComercial: string;
-    tecnologia: string;
-    objetivo: string;
-    costo: string;
-    visible: boolean;
+    name: string;
+    slug?: string;
+    formatCategory: string;
+    tagsInteraction?: string[];
+    tagsVibe?: string[];
+    tagsCapture?: string[];
+    track?: string;
+    origin?: string;
+    subtitle?: string;
+    description?: string;
+    keyFeatures?: string[];
+    addons?: string;
+    dimensions?: string;
+    power?: string;
+    setupTime?: string;
+    logisticsConstraints?: string;
+    internet?: string;
+    equipmentIncluded?: string;
+    modality?: string;
+    capacity?: string;
+    sessionLength?: string;
+    photosNeeded?: boolean;
+    videoUrl?: string;
     image?: string;
     secondImage?: string;
+    visible: boolean;
+    sortOrder?: number;
     createdAt?: number;
+    // Legacy fields
+    experiencia?: string;
   }
 
   let experiencesCache: AdminExperience[] = [];
@@ -156,7 +271,7 @@ import Layout from '../layouts/Layout.astro';
       .toLowerCase()
       .trim()
       .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[̀-ͯ]/g, '')
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
 
@@ -185,20 +300,19 @@ import Layout from '../layouts/Layout.astro';
     return field instanceof HTMLTextAreaElement ? field : null;
   };
 
+  // Parse comma-separated tag string → array
+  const parseTags = (value: string): string[] =>
+    value.split(',').map(s => s.trim()).filter(Boolean);
+
+  // Parse newline-separated features → array (max 4)
+  const parseFeatures = (value: string): string[] =>
+    value.split('\n').map(s => s.trim()).filter(Boolean).slice(0, 4);
+
   const clearExperienceEditState = () => {
     editingUid = null;
-
-    if (formTitle instanceof HTMLHeadingElement) {
-      formTitle.textContent = 'Crear experiencia';
-    }
-
-    if (submitButton instanceof HTMLButtonElement) {
-      submitButton.textContent = 'Guardar experiencia';
-    }
-
-    if (cancelEditButton instanceof HTMLButtonElement) {
-      cancelEditButton.hidden = true;
-    }
+    if (formTitle instanceof HTMLHeadingElement) formTitle.textContent = 'Crear experiencia';
+    if (submitButton instanceof HTMLButtonElement) submitButton.textContent = 'Guardar experiencia';
+    if (cancelEditButton instanceof HTMLButtonElement) cancelEditButton.hidden = true;
   };
 
   const openModal = (options?: { resetForm?: boolean }) => {
@@ -218,6 +332,10 @@ import Layout from '../layouts/Layout.astro';
       if (form instanceof HTMLFormElement) {
         form.reset();
         clearExperienceEditState();
+        document.querySelectorAll<HTMLElement>('.upload-hint').forEach(el => {
+          el.textContent = '';
+          el.className = 'upload-hint';
+        });
       }
     }
   };
@@ -230,73 +348,123 @@ import Layout from '../layouts/Layout.astro';
 
     editingUid = uid;
 
-    const experienciaInput = getInputByName('experiencia');
-    const tecnologiaInput = getInputByName('tecnologia');
-    const objetivoInput = getInputByName('objetivo');
-    const costoInput = getInputByName('costo');
-    const visibleInput = getInputByName('visible');
-    const imageInput = getInputByName('image');
-    const secondImageInput = getInputByName('secondImage');
-    const descripcionTextarea = getTextareaByName('descripcionDetallada');
-    const pitchTextarea = getTextareaByName('pitchComercial');
+    // Helper to set input value safely
+    const setInput = (name: string, value: string) => {
+      const el = getInputByName(name);
+      if (el) el.value = value;
+    };
+    const setTextarea = (name: string, value: string) => {
+      const el = getTextareaByName(name);
+      if (el) el.value = value;
+    };
+    const setCheckbox = (name: string, checked: boolean) => {
+      const el = getInputByName(name);
+      if (el) el.checked = checked;
+    };
 
-    if (experienciaInput) experienciaInput.value = experience.experiencia ?? '';
-    if (descripcionTextarea) descripcionTextarea.value = experience.descripcionDetallada ?? '';
-    if (pitchTextarea) pitchTextarea.value = experience.pitchComercial ?? '';
-    if (tecnologiaInput) tecnologiaInput.value = experience.tecnologia ?? '';
-    if (objetivoInput) objetivoInput.value = experience.objetivo ?? '';
-    if (costoInput) costoInput.value = experience.costo ?? '';
-    if (visibleInput) visibleInput.checked = Boolean(experience.visible);
-    if (imageInput) imageInput.value = '';
+    // Identity — support both new and legacy field names
+    setInput('name', experience.name || experience.experiencia || '');
+    setInput('formatCategory', experience.formatCategory || '');
+    setInput('track', experience.track || '');
+    setInput('origin', experience.origin || '');
+
+    // Tags — join arrays back to comma-separated strings
+    setInput('tagsInteraction', (experience.tagsInteraction ?? []).join(', '));
+    setInput('tagsVibe', (experience.tagsVibe ?? []).join(', '));
+    setInput('tagsCapture', (experience.tagsCapture ?? []).join(', '));
+
+    // Content
+    setInput('subtitle', experience.subtitle || '');
+    setTextarea('description', experience.description || '');
+    setTextarea('keyFeatures', (experience.keyFeatures ?? []).join('\n'));
+    setTextarea('addons', experience.addons || '');
+
+    // Logistics
+    setInput('dimensions', experience.dimensions || '');
+    setInput('power', experience.power || '');
+    setInput('setupTime', experience.setupTime || '');
+    setInput('logisticsConstraints', experience.logisticsConstraints || '');
+    setInput('internet', experience.internet || '');
+    setInput('modality', experience.modality || '');
+    setInput('capacity', experience.capacity || '');
+    setInput('sessionLength', experience.sessionLength || '');
+    setTextarea('equipmentIncluded', experience.equipmentIncluded || '');
+
+    // Media
+    setInput('imageUrl', experience.image || '');
+    setInput('secondImageUrl', experience.secondImage || '');
+    setInput('videoUrl', experience.videoUrl || '');
+    setCheckbox('photosNeeded', Boolean(experience.photosNeeded));
+
+    // Settings
+    setCheckbox('visible', Boolean(experience.visible));
 
     if (formTitle instanceof HTMLHeadingElement) {
-      formTitle.textContent = `Editar: ${experience.experiencia}`;
+      formTitle.textContent = `Editar: ${experience.name || experience.experiencia}`;
     }
-
-    if (submitButton instanceof HTMLButtonElement) {
-      submitButton.textContent = 'Actualizar experiencia';
-    }
-
-    if (cancelEditButton instanceof HTMLButtonElement) {
-      cancelEditButton.hidden = false;
-    }
+    if (submitButton instanceof HTMLButtonElement) submitButton.textContent = 'Actualizar experiencia';
+    if (cancelEditButton instanceof HTMLButtonElement) cancelEditButton.hidden = false;
 
     openModal({ resetForm: false });
   };
 
   const setExperiencesStatus = (message: string, type: 'success' | 'error' = 'success') => {
     if (!(experiencesStatus instanceof HTMLParagraphElement)) return;
-
     experiencesStatus.classList.remove('success', 'error');
     experiencesStatus.textContent = message;
     experiencesStatus.classList.add(type);
   };
 
+  const experiencesCount = document.querySelector('#experiences-count');
+
   const renderExperiences = async () => {
     if (!(experiencesList instanceof HTMLTableSectionElement)) return;
-
-    experiencesList.innerHTML = '<tr><td colspan="3" class="hint">Cargando experiencias...</td></tr>';
+    experiencesList.innerHTML = '<tr><td colspan="4" class="hint">Cargando experiencias...</td></tr>';
+    if (experiencesCount instanceof HTMLParagraphElement) experiencesCount.textContent = '';
 
     try {
       const experiences = await getExperiences();
+
+      // Sort by sortOrder; items without it go by createdAt desc
+      experiences.sort((a, b) => {
+        const aOrder = a.sortOrder ?? Infinity;
+        const bOrder = b.sortOrder ?? Infinity;
+        if (aOrder !== bOrder) return aOrder - bOrder;
+        return (b.createdAt ?? 0) - (a.createdAt ?? 0);
+      });
+
       experiencesCache = experiences;
 
       if (!experiences.length) {
-        experiencesList.innerHTML = '<tr><td colspan="3" class="hint">No hay experiencias registradas aún.</td></tr>';
+        experiencesList.innerHTML = '<tr><td colspan="4" class="hint">No hay experiencias registradas aún.</td></tr>';
         return;
       }
 
+      const visibleCount = experiences.filter(e => e.visible).length;
+      if (experiencesCount instanceof HTMLParagraphElement) {
+        experiencesCount.textContent = `${experiences.length} experiencias en total · ${visibleCount} visibles · ${experiences.length - visibleCount} ocultas`;
+      }
+
       experiencesList.innerHTML = experiences
-        .map(
-          (experience) => `
-            <tr class="exp-row">
+        .map((experience, index) => {
+          const displayName = escapeHtml(experience.name || experience.experiencia || 'Sin nombre');
+          const displayCategory = escapeHtml(experience.formatCategory || '');
+          return `
+            <tr class="exp-row" draggable="true" data-uid="${experience.uid}">
+              <td class="col-handle">
+                <div class="handle-cell">
+                  <span class="drag-handle" title="Arrastrar para reordenar">⠿</span>
+                  <span class="order-num">${index + 1}</span>
+                </div>
+              </td>
               <td class="col-image">
-                <img src="${experience.image || '/assets/experiences/experiencia-ejemplo1.jpg'}" alt="${escapeHtml(experience.experiencia)}" class="exp-image" />
+                <img src="${experience.image || '/assets/experiences/experiencia-ejemplo1.jpg'}" alt="${displayName}" class="exp-image" />
               </td>
               <td class="col-title">
                 <div class="exp-title">
-                  <h4>${escapeHtml(experience.experiencia || 'Sin nombre')}</h4>
-                  </div>
+                  <h4>${displayName}</h4>
+                  ${displayCategory ? `<p class="exp-tech">${displayCategory}</p>` : ''}
+                </div>
               </td>
               <td class="col-actions">
                 <div class="experience-actions">
@@ -312,52 +480,106 @@ import Layout from '../layouts/Layout.astro';
                 </div>
               </td>
             </tr>
-          `
-        )
+          `;
+        })
         .join('');
+
+      attachDragHandlers();
     } catch (error) {
       console.error('Error cargando experiencias:', error);
-      experiencesList.innerHTML = '<tr><td colspan="3" class="error">No se pudieron cargar las experiencias.</td></tr>';
+      experiencesList.innerHTML = '<tr><td colspan="4" class="error">No se pudieron cargar las experiencias.</td></tr>';
     }
+  };
+
+  const attachDragHandlers = () => {
+    if (!(experiencesList instanceof HTMLTableSectionElement)) return;
+
+    let dragSrcUid: string | null = null;
+
+    experiencesList.querySelectorAll<HTMLTableRowElement>('.exp-row').forEach((row) => {
+      row.addEventListener('dragstart', (e) => {
+        dragSrcUid = row.dataset.uid || null;
+        row.classList.add('dragging');
+        if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
+      });
+
+      row.addEventListener('dragend', () => {
+        row.classList.remove('dragging');
+        experiencesList.querySelectorAll('.exp-row').forEach(r => r.classList.remove('drag-over'));
+      });
+
+      row.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+        if (row.dataset.uid !== dragSrcUid) {
+          experiencesList.querySelectorAll('.exp-row').forEach(r => r.classList.remove('drag-over'));
+          row.classList.add('drag-over');
+        }
+      });
+
+      row.addEventListener('dragleave', () => {
+        row.classList.remove('drag-over');
+      });
+
+      row.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        row.classList.remove('drag-over');
+
+        const toUid = row.dataset.uid;
+        if (!dragSrcUid || !toUid || dragSrcUid === toUid) return;
+
+        const fromIndex = experiencesCache.findIndex(exp => exp.uid === dragSrcUid);
+        const toIndex = experiencesCache.findIndex(exp => exp.uid === toUid);
+        if (fromIndex === -1 || toIndex === -1) return;
+
+        const reordered = [...experiencesCache];
+        const [moved] = reordered.splice(fromIndex, 1);
+        reordered.splice(toIndex, 0, moved);
+
+        try {
+          await updateSortOrders(reordered.map((exp, i) => ({ uid: exp.uid, sortOrder: i })));
+          setExperiencesStatus('Orden actualizado.');
+          await renderExperiences();
+        } catch (error) {
+          setExperiencesStatus(
+            error instanceof Error ? error.message : 'No se pudo guardar el orden.',
+            'error'
+          );
+        }
+      });
+    });
   };
 
   tabs.forEach((btn) => {
     btn.addEventListener('click', () => {
       tabs.forEach((b) => b.classList.remove('active'));
       tabPanels.forEach((panel) => panel.classList.remove('active'));
-
       btn.classList.add('active');
-      const tabName = btn.getAttribute('data-tab');
-      const panel = document.querySelector(`#tab-${tabName}`);
+      const panel = document.querySelector(`#tab-${btn.getAttribute('data-tab')}`);
       if (panel) panel.classList.add('active');
     });
   });
 
   const renderClients = async () => {
     if (!(clientsList instanceof HTMLDivElement)) return;
-
     clientsList.innerHTML = '<p class="hint">Cargando clientes...</p>';
 
     try {
       const leads = await getLeads();
-
       if (!leads.length) {
         clientsList.innerHTML = '<p class="hint">No hay clientes registrados aún.</p>';
         return;
       }
-
       clientsList.innerHTML = leads
-        .map(
-          (lead) => `
-            <article class="client-card">
-              <h3>${lead.name}</h3>
-              <p><strong>Email:</strong> ${lead.email}</p>
-              <p><strong>Teléfono:</strong> ${lead.phone || 'N/A'}</p>
-              <p><strong>Empresa:</strong> ${lead.company || 'N/A'}</p>
-              <p><strong>Mensaje:</strong> ${lead.message}</p>
-            </article>
-          `
-        )
+        .map((lead) => `
+          <article class="client-card">
+            <h3>${lead.name}</h3>
+            <p><strong>Email:</strong> ${lead.email}</p>
+            <p><strong>Teléfono:</strong> ${lead.phone || 'N/A'}</p>
+            <p><strong>Empresa:</strong> ${lead.company || 'N/A'}</p>
+            <p><strong>Mensaje:</strong> ${lead.message}</p>
+          </article>
+        `)
         .join('');
     } catch (error) {
       console.error('Error cargando clientes:', error);
@@ -368,43 +590,30 @@ import Layout from '../layouts/Layout.astro';
   renderClients();
   renderExperiences();
 
-  // Event listeners para modal
-  if (createBtn instanceof HTMLButtonElement) {
-    createBtn.addEventListener('click', () => openModal());
-  }
-
-  if (modalCloseBtn instanceof HTMLButtonElement) {
-    modalCloseBtn.addEventListener('click', closeModal);
-  }
-
+  if (createBtn instanceof HTMLButtonElement) createBtn.addEventListener('click', () => openModal());
+  if (modalCloseBtn instanceof HTMLButtonElement) modalCloseBtn.addEventListener('click', closeModal);
   if (modal instanceof HTMLElement) {
-    modal.addEventListener('click', (event) => {
-      if (event.target === modal) {
-        closeModal();
-      }
-    });
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   }
-
   if (cancelEditButton instanceof HTMLButtonElement && form instanceof HTMLFormElement) {
     cancelEditButton.addEventListener('click', () => {
       form.reset();
       clearExperienceEditState();
       closeModal();
       status?.classList.remove('success', 'error');
-      if (status instanceof HTMLParagraphElement) {
-        status.textContent = '';
-      }
+      if (status instanceof HTMLParagraphElement) status.textContent = '';
     });
   }
 
   if (experiencesList instanceof HTMLTableSectionElement) {
     experiencesList.addEventListener('click', async (event) => {
-      const target = event.target instanceof HTMLButtonElement ? event.target : (event.target as HTMLElement).closest('button');
+      const target = event.target instanceof HTMLButtonElement
+        ? event.target
+        : (event.target as HTMLElement).closest('button');
       if (!(target instanceof HTMLButtonElement)) return;
 
       const action = target.dataset.action;
       const uid = target.dataset.uid;
-
       if (!action || !uid) return;
 
       try {
@@ -414,8 +623,7 @@ import Layout from '../layouts/Layout.astro';
           const isVisible = target.dataset.visible === 'true';
           await toggleExperienceVisibility(uid, !isVisible);
           setExperiencesStatus(
-            !isVisible ? 'Experiencia marcada como visible.' : 'Experiencia marcada como invisible.',
-            'success'
+            !isVisible ? 'Experiencia marcada como visible.' : 'Experiencia marcada como invisible.'
           );
           await renderExperiences();
           return;
@@ -427,15 +635,13 @@ import Layout from '../layouts/Layout.astro';
         }
 
         if (action === 'delete') {
-          const confirmed = window.confirm('¿Seguro que deseas eliminar esta experiencia?');
-          if (!confirmed) return;
-
+          if (!window.confirm('¿Seguro que deseas eliminar esta experiencia?')) return;
           await deleteExperience(uid);
           if (editingUid === uid && form instanceof HTMLFormElement) {
             form.reset();
             clearExperienceEditState();
           }
-          setExperiencesStatus('Experiencia eliminada correctamente.', 'success');
+          setExperiencesStatus('Experiencia eliminada correctamente.');
           await renderExperiences();
         }
       } catch (error) {
@@ -450,158 +656,163 @@ import Layout from '../layouts/Layout.astro';
     });
   }
 
+  // ── Inline image uploaders ──
+  const setupImageUploader = (
+    btnId: string,
+    fileInputId: string,
+    urlInputId: string,
+    statusId: string,
+    storageSuffix: string
+  ) => {
+    const btn = document.querySelector<HTMLButtonElement>(`#${btnId}`);
+    const fileInput = document.querySelector<HTMLInputElement>(`#${fileInputId}`);
+    const urlInput = document.querySelector<HTMLInputElement>(`#${urlInputId}`);
+    const statusEl = document.querySelector<HTMLElement>(`#${statusId}`);
+    if (!btn || !fileInput || !urlInput || !statusEl) return;
+
+    btn.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        statusEl.textContent = 'El archivo no es una imagen válida.';
+        statusEl.className = 'upload-hint error';
+        return;
+      }
+      btn.disabled = true;
+      statusEl.textContent = 'Subiendo imagen…';
+      statusEl.className = 'upload-hint';
+      try {
+        const uploadId = (editingUid || 'upload-' + Date.now()) + storageSuffix;
+        const { downloadUrl } = await uploadExperienceImage(uploadId, file);
+        urlInput.value = downloadUrl;
+        statusEl.textContent = '✓ Imagen subida correctamente';
+        statusEl.className = 'upload-hint success';
+      } catch (err) {
+        statusEl.textContent = err instanceof Error ? err.message : 'Error al subir imagen';
+        statusEl.className = 'upload-hint error';
+      } finally {
+        btn.disabled = false;
+        fileInput.value = '';
+      }
+    });
+  };
+
+  setupImageUploader('imageUploadBtn', 'imageFileInput', 'imageUrl', 'imageUploadStatus', '');
+  setupImageUploader('secondImageUploadBtn', 'secondImageFileInput', 'secondImageUrl', 'secondImageUploadStatus', '-second');
+
   if (form instanceof HTMLFormElement && status instanceof HTMLParagraphElement) {
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       status.classList.remove('success', 'error');
       status.textContent = editingUid ? 'Actualizando experiencia...' : 'Guardando experiencia...';
-
       if (submitButton instanceof HTMLButtonElement) submitButton.disabled = true;
       if (cancelEditButton instanceof HTMLButtonElement) cancelEditButton.disabled = true;
 
       try {
         const wasEditing = Boolean(editingUid);
         const formData = new FormData(form);
-        const experiencia = String(formData.get('experiencia') ?? '').trim();
-        const descripcionDetallada = String(formData.get('descripcionDetallada') ?? '').trim();
-        const pitchComercial = String(formData.get('pitchComercial') ?? '').trim();
-        const tecnologia = String(formData.get('tecnologia') ?? '').trim();
-        const objetivo = String(formData.get('objetivo') ?? '').trim();
-        const costo = String(formData.get('costo') ?? '').trim();
-        const visible = formData.get('visible') === 'on';
-        const imageFile = formData.get('image');
-        const secondImageFile = formData.get('secondImage');
-        const uid = editingUid || generateUid(experiencia);
 
-        if (
-          !experiencia ||
-          !descripcionDetallada ||
-          !pitchComercial ||
-          !tecnologia ||
-          !objetivo ||
-          !costo
-        ) {
-          throw new Error('Debes completar todos los campos obligatorios.');
+        const getString = (key: string) => String(formData.get(key) ?? '').trim();
+
+        // Identity
+        const name = getString('name');
+        const formatCategory = getString('formatCategory');
+        const track = getString('track');
+        const origin = getString('origin');
+
+        // Tags
+        const tagsInteraction = parseTags(getString('tagsInteraction'));
+        const tagsVibe = parseTags(getString('tagsVibe'));
+        const tagsCapture = parseTags(getString('tagsCapture'));
+
+        // Content
+        const subtitle = getString('subtitle');
+        const description = getString('description');
+        const keyFeatures = parseFeatures(getString('keyFeatures'));
+        const addons = getString('addons');
+
+        // Logistics
+        const dimensions = getString('dimensions');
+        const power = getString('power');
+        const setupTime = getString('setupTime');
+        const logisticsConstraints = getString('logisticsConstraints');
+        const internet = getString('internet');
+        const modality = getString('modality');
+        const capacity = getString('capacity');
+        const sessionLength = getString('sessionLength');
+        const equipmentIncluded = getString('equipmentIncluded');
+
+        // Media
+        const videoUrl = getString('videoUrl');
+        const photosNeeded = formData.get('photosNeeded') === 'on';
+
+        // Settings
+        const visible = formData.get('visible') === 'on';
+
+        if (!name || !formatCategory) {
+          throw new Error('Nombre y Categoría/Formato son obligatorios.');
         }
 
-        let image = '';
-        let secondImage: string | undefined;
-        let uploadWarning = '';
-
+        const uid = editingUid || generateUid(name);
         const editingExperience = editingUid
           ? experiencesCache.find((item) => item.uid === editingUid)
           : null;
 
-        if (editingExperience?.image) {
-          image = editingExperience.image;
-        }
-        if (editingExperience?.secondImage) {
-          secondImage = editingExperience.secondImage;
-        }
+        // Images are uploaded inline before submit; just read the URL inputs
+        const image = getString('imageUrl') || editingExperience?.image || '';
+        const secondImage = getString('secondImageUrl') || editingExperience?.secondImage || '';
 
-        // Procesar imagen principal
-        if (imageFile instanceof File && imageFile.size > 0) {
-          const maxBytes = 5 * 1024 * 1024;
-          if (!imageFile.type.startsWith('image/')) {
-            throw new Error('El archivo seleccionado no es una imagen válida.');
-          }
-
-          if (imageFile.size >= maxBytes) {
-            throw new Error('La imagen supera 5MB. Sube una imagen más liviana para cumplir las reglas de Storage.');
-          }
-
-          try {
-            const upload = await uploadExperienceImage(uid, imageFile);
-            image = upload.downloadUrl;
-          } catch (error) {
-            if (
-              error instanceof Error &&
-              error.message.includes('STORAGE_UNAUTHORIZED:')
-            ) {
-              uploadWarning =
-                ' La imagen no se subió por permisos de Storage (403). Verifica que las reglas de Storage estén desplegadas en el proyecto correcto. La experiencia sí se guardó sin imagen.';
-            } else {
-              throw error;
-            }
-          }
-        }
-
-        // Procesar segunda imagen
-        if (secondImageFile instanceof File && secondImageFile.size > 0) {
-          const maxBytes = 5 * 1024 * 1024;
-          if (!secondImageFile.type.startsWith('image/')) {
-            throw new Error('El archivo de la segunda imagen no es válido.');
-          }
-
-          if (secondImageFile.size >= maxBytes) {
-            throw new Error('La segunda imagen supera 5MB. Sube una imagen más liviana.');
-          }
-
-          try {
-            const secondImageName = `${uid}-second`;
-            const upload = await uploadExperienceImage(secondImageName, secondImageFile);
-            secondImage = upload.downloadUrl;
-          } catch (error) {
-            if (
-              error instanceof Error &&
-              error.message.includes('STORAGE_UNAUTHORIZED:')
-            ) {
-              uploadWarning =
-                ' La segunda imagen no se subió por permisos de Storage (403). La experiencia sí se guardó sin la segunda imagen.';
-            } else {
-              throw error;
-            }
-          }
-        }
+        const payload = {
+          name,
+          formatCategory,
+          tagsInteraction,
+          tagsVibe,
+          tagsCapture,
+          track,
+          origin,
+          subtitle,
+          description,
+          keyFeatures,
+          addons,
+          dimensions,
+          power,
+          setupTime,
+          logisticsConstraints,
+          internet,
+          modality,
+          capacity,
+          sessionLength,
+          equipmentIncluded,
+          videoUrl,
+          photosNeeded,
+          visible,
+          image,
+          secondImage,
+        };
 
         if (editingUid) {
-          const existingExperience = experiencesCache.find((exp) => exp.uid === editingUid);
-          const currentImage = existingExperience?.image;
-          const currentSecondImage = existingExperience?.secondImage;
-
-          await updateExperience(uid, {
-            experiencia,
-            descripcionDetallada,
-            pitchComercial,
-            tecnologia,
-            objetivo,
-            costo,
-            visible,
-            image: image || currentImage,
-            secondImage: secondImage || currentSecondImage,
-          });
+          await updateExperience(uid, payload);
         } else {
-          await createExperience({
-            uid,
-            experiencia,
-            descripcionDetallada,
-            pitchComercial,
-            tecnologia,
-            objetivo,
-            costo,
-            visible,
-            image,
-            secondImage,
-          });
+          await createExperience({ uid, ...payload });
         }
 
         form.reset();
         clearExperienceEditState();
         closeModal();
         await renderExperiences();
-        const successMessage = wasEditing
-          ? `Experiencia actualizada correctamente.${uploadWarning}`
-          : `Experiencia creada correctamente.${uploadWarning}`;
+
+        const successMessage = wasEditing ? 'Experiencia actualizada.' : 'Experiencia creada.';
         status.textContent = successMessage;
         status.classList.add('success');
-        setExperiencesStatus(successMessage, uploadWarning ? 'error' : 'success');
+        setExperiencesStatus(successMessage, 'success');
       } catch (error) {
-        console.error('Error creando experiencia:', error);
-        const errorMessage =
-          error instanceof Error ? error.message : 'No se pudo crear la experiencia.';
-        status.textContent = errorMessage;
+        console.error('Error guardando experiencia:', error);
+        const msg = error instanceof Error ? error.message : 'No se pudo guardar la experiencia.';
+        status.textContent = msg;
         status.classList.add('error');
-        setExperiencesStatus(errorMessage, 'error');
+        setExperiencesStatus(msg, 'error');
       } finally {
         if (submitButton instanceof HTMLButtonElement) submitButton.disabled = false;
         if (cancelEditButton instanceof HTMLButtonElement) cancelEditButton.disabled = false;
@@ -640,11 +851,7 @@ import Layout from '../layouts/Layout.astro';
     top: 100px;
   }
 
-  .sidebar h1 {
-    margin: 0 0 0.5rem;
-    color: #00ffff;
-    font-size: 1.3rem;
-  }
+  .sidebar h1 { margin: 0 0 0.5rem; color: #00ffff; font-size: 1.3rem; }
 
   .side-btn {
     padding: 0.7rem 0.9rem;
@@ -655,7 +862,6 @@ import Layout from '../layouts/Layout.astro';
     text-align: left;
     cursor: pointer;
   }
-
   .side-btn.active {
     background: linear-gradient(45deg, #00ffff, #ff00ff);
     color: #000;
@@ -670,17 +876,11 @@ import Layout from '../layouts/Layout.astro';
     padding: 1.5rem;
   }
 
-  .tab-panel {
-    display: none;
-  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
-  .tab-panel.active {
-    display: block;
-  }
-
-  .hint {
-    color: #bbbbbb;
-  }
+  .hint { color: #bbbbbb; }
+  .hint-inline { color: #888; font-size: 0.85em; font-weight: 400; }
 
   .clients-list {
     display: grid;
@@ -695,18 +895,10 @@ import Layout from '../layouts/Layout.astro';
     padding: 1rem;
     background: rgba(0, 0, 0, 0.45);
   }
+  .client-card h3 { margin: 0 0 0.6rem; color: #00ffff; }
+  .client-card p { margin: 0.35rem 0; color: #ddd; font-size: 0.95rem; }
 
-  .client-card h3 {
-    margin: 0 0 0.6rem;
-    color: #00ffff;
-  }
-
-  .client-card p {
-    margin: 0.35rem 0;
-    color: #ddd;
-    font-size: 0.95rem;
-  }
-
+  /* Form */
   .experience-form {
     display: flex;
     flex-direction: column;
@@ -714,127 +906,15 @@ import Layout from '../layouts/Layout.astro';
     margin-top: 1rem;
   }
 
-  .experiences-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 1rem;
-  }
-
-  .experience-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    padding: 0.9rem 1rem;
-    background: rgba(0, 0, 0, 0.35);
-  }
-
-  .experience-item h4 {
-    margin: 0;
-    font-size: 1rem;
-    color: #fff;
-  }
-
-  .experience-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    align-items: center;
-  }
-
-  .btn-row {
-    border: 2px solid;
-    border-radius: 10px;
-    padding: 0.7rem 1.1rem;
-    background: rgba(0, 0, 0, 0.4);
-    color: #fff;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    white-space: nowrap;
-  }
-
-  .btn-row:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .btn-icon {
-    font-size: 1.1rem;
-  }
-
-  .btn-label {
-    display: inline;
-  }
-
-  .btn-edit {
-    border-color: #00ffff;
-    background: rgba(0, 255, 255, 0.12);
+  .form-section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: #00ffff;
-  }
-
-  .btn-edit:hover:not(:disabled) {
-    background: rgba(0, 255, 255, 0.25);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-    transform: translateY(-2px);
-  }
-
-  .btn-delete {
-    border-color: #ff6b6b;
-    background: rgba(255, 107, 107, 0.12);
-    color: #ff6b6b;
-  }
-
-  .btn-delete:hover:not(:disabled) {
-    background: rgba(255, 107, 107, 0.25);
-    box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
-    transform: translateY(-2px);
-  }
-
-  .btn-toggle {
-    border-color: #ff00ff;
-    background: rgba(255, 0, 255, 0.12);
-    color: #ff00ff;
-  }
-
-  .btn-toggle:hover:not(:disabled) {
-    background: rgba(255, 0, 255, 0.25);
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
-    transform: translateY(-2px);
-  }
-
-  .section-divider {
-    margin: 1.5rem 0;
-    border: 0;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .form-actions {
-    display: flex;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-  }
-
-  .btn-secondary {
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    border-radius: 999px;
-    padding: 0.75rem 1.1rem;
-    cursor: pointer;
-  }
-
-  .field-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
   }
 
   .experience-form label {
@@ -854,17 +934,20 @@ import Layout from '../layouts/Layout.astro';
     font: inherit;
   }
 
-  .check-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
+  .experience-form input::placeholder,
+  .experience-form textarea::placeholder { color: #555; }
 
-  .check-row input[type='checkbox'] {
-    width: 18px;
-    height: 18px;
-    accent-color: #00ffff;
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
   }
+  .field-full { grid-column: 1 / -1; }
+
+  .check-row { display: flex; flex-direction: row; align-items: center; gap: 0.6rem; }
+  .check-row input[type='checkbox'] { width: 18px; height: 18px; accent-color: #00ffff; }
+
+  .form-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 
   .btn-submit {
     width: fit-content;
@@ -876,47 +959,18 @@ import Layout from '../layouts/Layout.astro';
     font-weight: 700;
     cursor: pointer;
   }
+  .btn-submit:disabled { opacity: 0.7; cursor: wait; }
 
-  .btn-submit:disabled {
-    opacity: 0.7;
-    cursor: wait;
+  .btn-secondary {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.75rem 1.1rem;
+    cursor: pointer;
   }
 
-  .status {
-    min-height: 1.2rem;
-    margin: 0;
-  }
-
-  .status.success {
-    color: #5dff8a;
-  }
-
-  .status.error,
-  .error {
-    color: #ff7d7d;
-  }
-
-  @media (max-width: 900px) {
-    .admin-shell {
-      grid-template-columns: 1fr;
-      padding: 1rem;
-    }
-
-    .sidebar {
-      position: static;
-    }
-
-    .field-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .experience-item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
-
-  /* Table styles */
+  /* Table */
   .exp-header {
     display: flex;
     justify-content: space-between;
@@ -937,11 +991,7 @@ import Layout from '../layouts/Layout.astro';
     transition: all 0.3s ease;
     white-space: nowrap;
   }
-
-  .btn-create:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-  }
+  .btn-create:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); }
 
   .experiences-table {
     width: 100%;
@@ -951,42 +1001,53 @@ import Layout from '../layouts/Layout.astro';
     border-radius: 10px;
     overflow: hidden;
   }
-
   .experiences-table thead {
     background: rgba(0, 255, 255, 0.1);
     border-bottom: 2px solid rgba(0, 255, 255, 0.3);
   }
-
-  .experiences-table th {
-    padding: 1rem;
-    text-align: left;
-    color: #00ffff;
-    font-weight: 700;
-  }
-
+  .experiences-table th { padding: 1rem; text-align: left; color: #00ffff; font-weight: 700; }
   .experiences-table tbody tr {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     transition: background-color 0.3s ease;
   }
+  .experiences-table tbody tr:hover { background-color: rgba(0, 255, 255, 0.05); }
+  .experiences-table td { padding: 1rem; }
 
-  .experiences-table tbody tr:hover {
-    background-color: rgba(0, 255, 255, 0.05);
+  .col-handle { width: 56px; text-align: center; }
+  .col-image { width: 120px; }
+  .col-actions { width: auto; }
+
+  .handle-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
   }
 
-  .experiences-table td {
-    padding: 1rem;
+  .drag-handle {
+    font-size: 1.4rem;
+    color: #444;
+    cursor: grab;
+    user-select: none;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .drag-handle:active { cursor: grabbing; }
+  .exp-row:hover .drag-handle { color: #888; }
+
+  .order-num {
+    font-size: 0.72rem;
+    color: #555;
+    line-height: 1;
   }
 
-  .col-image {
-    width: 120px;
+  .exp-row.dragging {
+    opacity: 0.35;
   }
 
-  .col-title {
-    flex: 1;
-  }
-
-  .col-actions {
-    width: auto;
+  .exp-row.drag-over td {
+    background: rgba(0, 255, 255, 0.07);
+    box-shadow: inset 0 2px 0 #00ffff;
   }
 
   .exp-image {
@@ -997,43 +1058,70 @@ import Layout from '../layouts/Layout.astro';
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .exp-title h4 {
-    margin: 0 0 0.3rem 0;
+  .exp-title h4 { margin: 0 0 0.3rem; color: #fff; font-size: 1rem; }
+  .exp-tech { margin: 0; color: #888; font-size: 0.85rem; }
+
+  .experience-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+
+  .btn-row {
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 0.7rem 1.1rem;
+    background: rgba(0, 0, 0, 0.4);
     color: #fff;
-    font-size: 1rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    white-space: nowrap;
   }
+  .btn-row:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-icon { font-size: 1.1rem; }
 
-  .exp-tech {
-    margin: 0;
+  .btn-edit { border-color: #00ffff; background: rgba(0, 255, 255, 0.12); color: #00ffff; }
+  .btn-edit:hover:not(:disabled) { background: rgba(0, 255, 255, 0.25); box-shadow: 0 0 15px rgba(0, 255, 255, 0.4); transform: translateY(-2px); }
+
+  .btn-delete { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.12); color: #ff6b6b; }
+  .btn-delete:hover:not(:disabled) { background: rgba(255, 107, 107, 0.25); box-shadow: 0 0 15px rgba(255, 107, 107, 0.4); transform: translateY(-2px); }
+
+  .btn-toggle { border-color: #ff00ff; background: rgba(255, 0, 255, 0.12); color: #ff00ff; }
+  .btn-toggle:hover:not(:disabled) { background: rgba(255, 0, 255, 0.25); box-shadow: 0 0 15px rgba(255, 0, 255, 0.4); transform: translateY(-2px); }
+
+  .experiences-count {
+    margin-top: 0.75rem;
     color: #888;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    text-align: right;
   }
 
-  /* Modal styles */
+  /* Status */
+  .status { min-height: 1.2rem; margin: 0; }
+  .status.success { color: #5dff8a; }
+  .status.error, .error { color: #ff7d7d; }
+
+  /* Modal */
   .modal {
     display: flex;
     align-items: center;
     justify-content: center;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(4px);
     z-index: 2000;
   }
-
-  .modal[hidden] {
-    display: none;
-  }
+  .modal[hidden] { display: none; }
 
   .modal-content {
     background: rgba(0, 0, 0, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 14px;
     padding: 0;
-    max-width: 600px;
+    max-width: 680px;
     width: 90%;
     max-height: 90vh;
     overflow-y: auto;
@@ -1047,13 +1135,11 @@ import Layout from '../layouts/Layout.astro';
     padding: 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
-
-  .modal-header h3 {
-    margin: 0;
-    color: #00ffff;
-    font-size: 1.3rem;
-  }
+  .modal-header h3 { margin: 0; color: #00ffff; font-size: 1.3rem; }
 
   .btn-close {
     background: none;
@@ -1070,12 +1156,50 @@ import Layout from '../layouts/Layout.astro';
     justify-content: center;
     transition: color 0.3s ease;
   }
+  .btn-close:hover { color: #00ffff; }
 
-  .btn-close:hover {
-    color: #00ffff;
+  .modal-content .experience-form { padding: 1.5rem; }
+
+  /* Image input row */
+  .image-input-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
   }
+  .image-url-input {
+    flex: 1;
+    min-width: 0;
+  }
+  .btn-upload {
+    flex-shrink: 0;
+    padding: 0.7rem 1rem;
+    border: 1px solid rgba(0, 255, 255, 0.4);
+    background: rgba(0, 255, 255, 0.08);
+    color: #00ffff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .btn-upload:hover:not(:disabled) { background: rgba(0, 255, 255, 0.18); }
+  .btn-upload:disabled { opacity: 0.5; cursor: wait; }
+  .hidden-file-input { display: none; }
+  .upload-hint {
+    display: block;
+    font-size: 0.78rem;
+    color: #888;
+    margin-top: 5px;
+    min-height: 1.1em;
+  }
+  .upload-hint.success { color: #5dff8a; }
+  .upload-hint.error { color: #ff7d7d; }
 
-  .modal-content .experience-form {
-    padding: 1.5rem;
+  @media (max-width: 900px) {
+    .admin-shell { grid-template-columns: 1fr; padding: 1rem; }
+    .sidebar { position: static; }
+    .field-grid { grid-template-columns: 1fr; }
+    .field-full { grid-column: 1; }
   }
 </style>
